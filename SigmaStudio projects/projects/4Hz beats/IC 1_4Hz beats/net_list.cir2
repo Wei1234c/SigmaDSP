@@ -1,0 +1,21 @@
+0 sin_lookupAlg19401 O_C0_A0_P1_out Link0
+1 sin_lookupAlg19402 O_C2_A0_P1_out Link1
+2 ICSigma100In1 O_C8_A0_P1_out Link2 O_C8_A0_P2_out Link3
+3 sin_lookupAlg19403 O_C87_A0_P1_out Link12
+4 sin_lookupAlg19404 O_C89_A0_P1_out Link13
+5 GPIAlg1 O_C107_A0_P1_out Link16
+6 ExtIntInAlg1 O_C190_A0_P1_out Link18
+7 stereomux1940ns2 I_C71_A0_P3_in Link0 I_C71_A0_P4_in Link1 I_C71_A0_P5_in Link12 I_C71_A0_P6_in Link13 O_C71_A0_P1_out Link14 O_C71_A0_P2_out Link15
+8 Gain1940AlgNS3 I_C23_A0_P1_in Link2 O_C23_A0_P2_out Link5
+9 Gain1940AlgNS4 I_C26_A0_P1_in Link3 O_C26_A0_P2_out Link4
+10 ToggleOneAlg1 I_C169_A0_P1_in Link16 I_C169_A0_P2_in Link18 O_C169_A0_P3_out Link17 O_C169_A0_P4_out Link19
+11 SWGain1940DBAlg1 I_C83_A0_P1_in Link5 I_C83_A0_P3_in Link4 O_C83_A0_P2_out Link10 O_C83_A0_P4_out Link11
+12 Gain1940AlgNS1 I_C33_A0_P1_in Link14 O_C33_A0_P2_out Link20
+13 Gain1940AlgNS2 I_C36_A0_P1_in Link15 O_C36_A0_P2_out Link21
+14 RegReadIntOutAlg1 I_C182_A0_P1_in Link19
+15 EQ1940Dual1 I_C56_A0_P1_in Link10 I_C56_A0_P2_in Link11 O_C56_A0_P3_out Link6 O_C56_A0_P4_out Link7
+16 DCinputmux_stereo_Alg1 I_C118_A0_P3_in Link17 I_C118_A0_P4_in Link6 I_C118_A0_P5_in Link7 I_C118_A0_P6_in Link20 I_C118_A0_P7_in Link21 O_C118_A0_P1_out Link8 O_C118_A0_P2_out Link9
+17 ICSigma100Out4 I_C21_A0_P1_in Link21
+18 ICSigma100Out3 I_C19_A0_P1_in Link20
+19 ICSigma100Out1 I_C4_A0_P1_in Link8
+20 ICSigma100Out2 I_C6_A0_P1_in Link9
