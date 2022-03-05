@@ -6,7 +6,7 @@ try:
     from .sigma_studio.project.project_xml import get_ICs
 
 except:
-    from project_xml import get_IC
+    from project_xml import get_ICs
 
 
 
@@ -196,9 +196,10 @@ class Factory:
         for item in os.listdir(path):
             item_url = os.sep.join((path, item))
 
-            if os.path.isfile(item_url) and item_url.lower().endswith('.py'):
-                files_list.append(item_url)
-            elif os.path.isdir(item_url):
+            if os.path.isdir(item_url):
                 files_list.extend(cls._get_all_files(item_url))
+
+            elif os.path.isfile(item_url) and item_url.lower().endswith('.py'):
+                files_list.append(item_url)
 
         return files_list
