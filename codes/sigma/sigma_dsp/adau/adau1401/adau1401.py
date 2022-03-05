@@ -16,7 +16,7 @@ except:
 
 
 
-class ADAU1401(ADAU):
+class ADAU1701(ADAU):
     class _Control(ADAU._Control):
         CONTROL_REGISTER_ADDRESS = 0x081C
 
@@ -670,6 +670,15 @@ class ADAU1401(ADAU):
 
 
 
-ADAU1401A = ADAU1401
+class ADAU1702(ADAU1701):
+    class _ProgramRAM(ADAU1701._ProgramRAM):
+        ADDRESS_MIN = 0x0400
+        ADDRESS_MAX = 0x05FF
+        N_BITS = 40
+        N_BYTES = (ADDRESS_MAX - ADDRESS_MIN + 1) * N_BITS // 8
 
-ADAU1701 = ADAU1401
+
+
+ADAU1401 = ADAU1701
+
+ADAU1401A = ADAU1401

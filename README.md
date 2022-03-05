@@ -4,7 +4,13 @@
 [![SigmaDSP PC Control Test](https://raw.githubusercontent.com/Wei1234c/SigmaDSP/master/jpgs/demo_equip_setup.png)](https://youtu.be/XHlZtDsa4oE)     
 
 
-
+### What is This?
+- This is a Python package, which...:
+    - Control SigmaDSP (e.g. ADAU1401/ADAU1701) from PC (with an USB-I2C converter, e.g. FTDI FT232H) by:
+        - Reads the XML file of SigmaStudio project and generates proxy objects.
+        - These objects represent SigmaStudio Toolbox algorithms in your project, and offer functions like set_frequency, set_dB, set_coefficients... correspondingly.
+        
+        
 ### Why This?
 - ADAU1401/ADAU1701 are precious for DSP tasks, but I would like to tune filter coefficients automatically, therefore need to control DSP functions on the fly.
 - SigmaStudio supports scripting from Python, see [SigmaStudio Scripting from Python](https://wiki.analog.com/resources/tools-software/sigmastudio/usingsigmastudio/scripting/python). However, I would prefer that the same package can be used on Windows / Linux, PC / RPi / ESP32 without modification. 
@@ -17,7 +23,7 @@
     - Load from:  
         - files: 
             - Binary (bytearray) file
-            - SigmStudio text files (eg. NumBytes_IC_1.dat, TxBuffer_IC_1.dat)
+            - SigmStudio text files (e.g. NumBytes_IC_1.dat, TxBuffer_IC_1.dat)
             - SigmaStudio project.xml
         - EEPROM
     - Save to:   
@@ -28,6 +34,7 @@
         
 ### Supported Chips
 - ADAU1701
+- ADAU1702
 - ADAU1401
 - ADAU1401A
 
