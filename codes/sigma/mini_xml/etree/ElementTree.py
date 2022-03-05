@@ -31,6 +31,7 @@ import io
 
 try:
     from .. import xmltok2
+
 except:
     import xmltok2
 
@@ -108,8 +109,6 @@ def parse_el(stream):
     root = None
     last = None
 
-    tk = xmltok2.tokenize(stream)
-
     for ev in xmltok2.tokenize(stream):
         typ = ev[0]
 
@@ -130,7 +129,8 @@ def parse_el(stream):
 
         elif typ == xmltok2.TEXT:
             if last is None:
-                stack[-1].text = ev[1]
+                if len(stack) > 0:
+                    stack[-1].text = ev[1]
             else:
                 last.tail = ev[1]
 
@@ -149,6 +149,5 @@ def parse(source):
 
 
 def fromstring(data):
-    print('=====================================')
     buf = io.StringIO(data)
     return parse_el(buf)

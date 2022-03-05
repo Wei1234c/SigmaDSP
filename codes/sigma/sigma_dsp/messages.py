@@ -113,7 +113,7 @@ class Message:
 
 
     @staticmethod
-    def messages_from_SigmStudio_files(file_NumBytes, file_TxBuffer):
+    def messages_from_SigmaStudio_files(file_NumBytes, file_TxBuffer):
         with open(file_NumBytes, 'tr') as f:
             sizes = ''.join(f.readlines()).replace('\n', ',').replace(' ', '').split(',')
             segment_sizes = tuple(int(s) for s in sizes if s != '')

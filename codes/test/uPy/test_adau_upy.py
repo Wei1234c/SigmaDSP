@@ -4,7 +4,6 @@ import os
 try:
     from utilities.adapters import peripherals
     from sigma.sigma_dsp.adau import ADAU
-    from sigma.sigma_dsp.adau.adau1401 import ADAU1401
     from sigma.factory import Factory
     from bridges.ftdi.controllers.i2c import I2cController
     from bridges.interfaces.micropython.machine import Pin
@@ -51,8 +50,8 @@ except:
 
     #  for ESP32 ===========
 
-# dsp = ADAU1401(bus)
 dsp = ADAU(bus)
+
 
 
 class mo:
@@ -68,6 +67,9 @@ param.size = len(param.bytes)
 
 dsp.write_parameter(param)
 print(dsp.read_parameter(param))
+
+# ======================================
+
 
 # factory = Factory(project_xml_file_url = project_xml_file_url,
 #                   # class_files_root_url = class_files_root_url,

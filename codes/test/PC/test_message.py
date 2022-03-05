@@ -22,7 +22,7 @@ while len(message_bytes) > 0:
 
 # ============================
 
-messages = Message.messages_from_SigmStudio_files('NumBytes_IC_1.dat', 'TxBuffer_IC_1.dat')
+messages = Message.messages_from_SigmaStudio_files('NumBytes_IC_1.dat', 'TxBuffer_IC_1.dat')
 
 with open('E2Prom.bin', 'rb') as f:
     messages = Message.messages_from_bytes(f.read())

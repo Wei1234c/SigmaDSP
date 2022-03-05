@@ -100,6 +100,10 @@ class Factory:
     @class_files_root_url.setter
     def class_files_root_url(self, url):
         self._class_files_root_url = url
+
+        if Factory.TEMP_PATH not in os.listdir():
+            os.mkdir(Factory.TEMP_PATH)
+
         if url is not None:
             self._copy_files()
 
@@ -171,9 +175,6 @@ class Factory:
 
 
     def _copy_files(self):
-
-        if Factory.TEMP_PATH not in os.listdir():
-            os.makedirs(Factory.TEMP_PATH)
 
         for _, file_name, path in self._get_classes_list(self._class_files_root_url):
             if file_name.endswith('.py'):

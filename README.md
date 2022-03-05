@@ -1,4 +1,4 @@
-### SigmaDSP tools box.
+### SigmaDSP Toolbox Proxy
 
 
 [![SigmaDSP PC Control Test](https://raw.githubusercontent.com/Wei1234c/SigmaDSP/master/jpgs/demo_equip_setup.png)](https://youtu.be/XHlZtDsa4oE)     
@@ -6,8 +6,8 @@
 
 
 ### Why This?
-- ADAU1401/ADAU1701 are precious for DSP tasks, but I would like to tune filter coefficients automatically, therefor need to control DSP funcitons on the fly.
-- SigmaStudio supports scripting from Python, see [SigmaStudio Scripting from Python](https://wiki.analog.com/resources/tools-software/sigmastudio/usingsigmastudio/scripting/python), however I hope the same package can be used on Windows / Linux, PC / RPi / ESP32 without modification. 
+- ADAU1401/ADAU1701 are precious for DSP tasks, but I would like to tune filter coefficients automatically, therefore need to control DSP functions on the fly.
+- SigmaStudio supports scripting from Python, see [SigmaStudio Scripting from Python](https://wiki.analog.com/resources/tools-software/sigmastudio/usingsigmastudio/scripting/python). However, I would prefer that the same package can be used on Windows / Linux, PC / RPi / ESP32 without modification. 
 
 ### Design and Features  
 - PC control: Can control DSP hardware's behavior from PC, so resources (like Python, AI) are available for filter tuning.

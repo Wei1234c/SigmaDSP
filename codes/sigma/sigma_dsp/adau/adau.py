@@ -253,8 +253,8 @@ class ADAU(dsp_processor.Device):
                 self.write_message(message)
 
 
-        def load_SigmStudio_files(self, file_NumBytes, file_TxBuffer):
-            for message in Message.messages_from_SigmStudio_files(file_NumBytes, file_TxBuffer):
+        def load_SigmaStudio_files(self, file_NumBytes, file_TxBuffer):
+            for message in Message.messages_from_SigmaStudio_files(file_NumBytes, file_TxBuffer):
                 self.write_message(message)
 
 

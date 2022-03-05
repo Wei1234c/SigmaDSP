@@ -35,8 +35,8 @@ factory = Factory(project_xml_file_url = project_xml_file_url,
                   )
 
 print(factory.get_ic().df)
-factory.show_methods()
 cells = factory.get_cells()
+factory.show_methods()
 
 for o in factory.get_cells_manifest():
     print(o)
