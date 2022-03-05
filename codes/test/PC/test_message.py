@@ -1,5 +1,5 @@
 from sigma.sigma_dsp.messages import Message, MessageWrite, MessageDelay
-from sigma.sigma_studio.project.project_xml import get_IC
+from sigma.sigma_studio.project.project_xml import get_ICs
 
 
 messages = [MessageWrite(0x081c, bytes([0x00, 0x40])),
@@ -36,7 +36,7 @@ from utilities.adapters import peripherals
 
 
 project_xml_file_url = os.sep.join(['..', '..', '..', 'SigmaStudio projects', 'projects', 'demo', 'demo.xml'])
-ic = get_IC(project_xml_file_url)
+ic = get_ICs(project_xml_file_url)[0]
 
 bus = peripherals.I2C(None)
 dsp = ADAU1401(bus)

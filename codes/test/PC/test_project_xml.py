@@ -1,9 +1,9 @@
-from sigma.sigma_studio.project.project_xml import get_IC
+from sigma.sigma_studio.project.project_xml import get_ICs
 
 import os
 
 project_xml_file_url = os.sep.join(['..', '..', '..', 'SigmaStudio projects', 'projects', 'demo', 'demo.xml'])
-ic = get_IC(project_xml_file_url)
+ic = get_ICs(project_xml_file_url)[0]
 
 # ================================================
 ba0 = ic._bytearray_string_to_bytes(ic.registers['Param']._get_text('Data'))

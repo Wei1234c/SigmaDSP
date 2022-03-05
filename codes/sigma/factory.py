@@ -3,7 +3,7 @@ import sys
 
 
 try:
-    from .sigma_studio.project.project_xml import get_IC
+    from .sigma_studio.project.project_xml import get_ICs
 
 except:
     from project_xml import get_IC
@@ -38,19 +38,19 @@ class Factory:
 
 
     # XML related ==========================
-    def get_ic(self):
+    def get_ic(self, ic_idx = 0):
         assert self.project_xml_file_url is not None, \
             "Need 'project_xml_file_url': project's XML file."
 
         cls_numeric = self.dsp.DspNumber if self.dsp is not None else None
 
-        return get_IC(self.project_xml_file_url, cls_numeric = cls_numeric)
+        return get_ICs(self.project_xml_file_url, cls_numeric = cls_numeric)[ic_idx]
 
 
     # Toolbox Cell related ==========================
-    def get_cells(self):
+    def get_cells(self, ic_idx = 0):
 
-        ic = self.get_ic()
+        ic = self.get_ic(ic_idx)
         cells = {}
 
         for module in ic.modules.values():
@@ -60,29 +60,29 @@ class Factory:
         return cells
 
 
-    def get_cell_by_name(self, cell_name):
+    def get_cell_by_name(self, cell_name, ic_idx = 0):
 
-        ic = self.get_ic()
+        ic = self.get_ic(ic_idx)
         xml_module = ic.modules[cell_name]
 
         return self._get_cell(xml_module, self._classes_dict)
 
 
-    def get_cells_manifest(self):
+    def get_cells_manifest(self, ic_idx = 0):
 
         def trim(cell_name):
             return cell_name.lower().replace(' ', '_').replace('-', '_')
 
 
         return sorted([f"{trim(cell.name)} = cells['{cell.name}']  # {cell.description}"
-                       for cell in self.get_cells().values()])
+                       for cell in self.get_cells(ic_idx).values()])
 
 
-    def show_methods(self, print_out = True):
+    def show_methods(self, ic_idx = 0, print_out = True):
         import json
 
         methods = {cell.name: json.loads(cell.show_methods(print_out = False))
-                   for cell in self.get_cells().values()}
+                   for cell in self.get_cells(ic_idx).values()}
 
         json_str = json.dumps(methods, indent = 4, sort_keys = False)
 

@@ -1,8 +1,8 @@
 /*
  * File:           defines.h
  *
- * Created:        Sunday, February 27, 2022 6:19:52 AM
- * Description:    Design 1 IC default download data definitions.
+ * Created:        Saturday, March 5, 2022 3:59:36 PM
+ * Description:     IC default download data definitions.
  *
  * This software is distributed in the hope that it will be useful,
  * but is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
@@ -22,8 +22,8 @@
 #define BufferSize_IC_1     	9254
 #define NumTransactions_IC_1	5
 
-#define BufferSize_IC_2     	0
-#define NumTransactions_IC_2	0
+#define BufferSize_IC_2     	6694
+#define NumTransactions_IC_2	5
 
 
 #endif

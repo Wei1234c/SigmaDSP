@@ -32,14 +32,13 @@ def findall(element, tag):
 
 
 
-def get_IC(file_name, cls_numeric = None):
+def get_ICs(file_name, cls_numeric = None):
     cls_numeric = DspNumber if cls_numeric is None else cls_numeric
 
     with open(file_name, 'rt', encoding = 'utf8') as f:
         root = ET.parse(f).getroot()
-        ic = find(root, 'IC')
 
-    return IC(ic, cls_numeric = cls_numeric)
+    return tuple(IC(ic, cls_numeric = cls_numeric) for ic in findall(root, 'IC'))
 
 
 
