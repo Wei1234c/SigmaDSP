@@ -188,19 +188,7 @@ class MessageDelay(Message):
 
 
 
-class Messages:
-
-    def __init__(self, messages):
-        self._messages = messages
-
-
-    def __getitem__(self, y):
-        return self._messages.__getitem__(y)
-
-
-    def __len__(self):
-        return len(self._messages)
-
+class Messages(list):
 
     @property
     def bytes(self):

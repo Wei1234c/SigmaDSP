@@ -180,20 +180,14 @@ class ADAU(dsp_processor.Device):
             for message in messages:
                 if message.message_type == 'Write' and \
                         message.subaddress == self._parent.parameter_ram.ADDRESS_MIN:
-
                     assert len(data_bytes) == len(message.data)
 
                     message.data = data_bytes
-
                     self.write(messages.bytes)
                     return
 
-            # message for parameters not exits.
-            message = MessageWrite(subaddress = self._parent.parameter_ram.ADDRESS_MIN, data = data_bytes)
-            messages.append(message)
-
+            messages.append(MessageWrite(subaddress = self._parent.parameter_ram.ADDRESS_MIN, data = data_bytes))
             self.write(messages.bytes)
-            return
 
 
         # serialization =====================================
@@ -314,17 +308,17 @@ class ADAU(dsp_processor.Device):
 
         # eeprom operations ===================
 
-        def reload_from_eeprom(self):
-            for message in self._parent.eeprom.messages:
-                self.write_message(message)
-
-
         def load_eeprom_from_file(self, binary_file_name):
             self._parent.eeprom.from_file(binary_file_name)
 
 
         def dump_eeprom_to_file(self, binary_file_name):
             self._parent.eeprom.to_file(binary_file_name)
+
+
+        def reload_from_eeprom(self):
+            for message in self._parent.eeprom.messages:
+                self.write_message(message)
 
 
         def save_parameters_to_eeprom(self, data_bytes):

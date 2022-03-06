@@ -37,21 +37,7 @@ class Factory:
         self.dsp = None
 
 
-    # serialization ==========================
-
-    def save_parameters_to_eeprom(self, ic_idx = 0):
-        ic = self.get_ic(ic_idx)
-
-        addr_sizes = {p.address: p.size for p in ic.parameters.values()}
-        addrs = sorted(addr_sizes.keys())
-
-        parameter_bytes = b''.join([self.dsp.read_addressed_bytes(reg_address = addr, n_bytes = addr_sizes[addr])
-                                    for addr in addrs])
-
-        self.dsp.control.save_parameters_to_eeprom(parameter_bytes)
-
-
-    # XML related ==========================
+    # XML =====================================================
     def get_ic(self, ic_idx = 0):
         assert self.project_xml_file_url is not None, \
             "Need 'project_xml_file_url': project's XML file."
@@ -61,7 +47,21 @@ class Factory:
         return get_ICs(self.project_xml_file_url, cls_numeric = cls_numeric)[ic_idx]
 
 
-    # Toolbox Cell related ==========================
+    def save_parameters_to_eeprom(self, ic_idx = 0):
+        ic = self.get_ic(ic_idx)
+        self.read_all_parameters(ic)  # refresh values
+        self.dsp.control.save_parameters_to_eeprom(ic.parameter_bytes)
+
+
+    def read_all_parameters(self, ic):
+        if self.dsp is not None:
+            for param in ic.parameters.values():
+                ba = self.dsp.read_parameter(param)
+                if ba is not None:
+                    param.set_value(ba)
+
+
+    # Toolbox Cell ============================================
     def get_cells(self, ic_idx = 0):
 
         ic = self.get_ic(ic_idx)
@@ -106,6 +106,8 @@ class Factory:
             return json_str
 
 
+    # classes ==========================================
+
     @property
     def class_files_root_url(self):
         return self._class_files_root_url
@@ -142,6 +144,7 @@ class Factory:
 
     # private functions ==================================
 
+    # Toolbox Cell ========================================
     def _get_cell(self, xml_module, classes_dict):  # module: project_xml.Module
 
         class_name = xml_module.algorithm_name
@@ -153,6 +156,7 @@ class Factory:
         return cell_object
 
 
+    # classes =================================
     @classmethod
     def _get_classes_dict(cls):
         classes = cls._get_classes_list(cls.TEMP_PATH)
@@ -187,6 +191,8 @@ class Factory:
             end = line.find('(') or line.find(':')
             return line[:end].strip()
 
+
+    # files =================================
 
     def _copy_files(self):
 

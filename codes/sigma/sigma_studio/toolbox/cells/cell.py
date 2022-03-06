@@ -170,7 +170,8 @@ class Slewer(Cell):
 
     @staticmethod
     def _get_slew_rate_RC(slew):
-        return int(log2(1 / slew))
+        if slew > 0:
+            return int(log2(1 / slew))
 
 
 

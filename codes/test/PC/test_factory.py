@@ -7,7 +7,7 @@ from sigma.sigma_dsp.adau.adau1401 import ADAU1401
 from utilities.adapters import peripherals
 
 
-with_hardware_device = True
+with_hardware_device = False
 
 if with_hardware_device:
     ctrl = I2cController()
