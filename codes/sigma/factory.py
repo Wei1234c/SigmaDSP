@@ -20,8 +20,8 @@ class Factory:
         self.class_files_root_url = class_files_root_url
         self.dsp = dsp
 
-        if Factory.TEMP_PATH not in sys.path:
-            sys.path.append(Factory.TEMP_PATH)
+        if self.TEMP_PATH not in sys.path:
+            sys.path.append(self.TEMP_PATH)
 
 
     def __enter__(self):
@@ -35,6 +35,20 @@ class Factory:
     def __del__(self):
         self._classes_dict = None
         self.dsp = None
+
+
+    # serialization ==========================
+
+    def save_parameters_to_eeprom(self, ic_idx = 0):
+        ic = self.get_ic(ic_idx)
+
+        addr_sizes = {p.address: p.size for p in ic.parameters.values()}
+        addrs = sorted(addr_sizes.keys())
+
+        parameter_bytes = b''.join([self.dsp.read_addressed_bytes(reg_address = addr, n_bytes = addr_sizes[addr])
+                                    for addr in addrs])
+
+        self.dsp.control.save_parameters_to_eeprom(parameter_bytes)
 
 
     # XML related ==========================
@@ -101,8 +115,8 @@ class Factory:
     def class_files_root_url(self, url):
         self._class_files_root_url = url
 
-        if Factory.TEMP_PATH not in os.listdir():
-            os.mkdir(Factory.TEMP_PATH)
+        if self.TEMP_PATH not in os.listdir():
+            os.mkdir(self.TEMP_PATH)
 
         if url is not None:
             self._copy_files()
@@ -113,7 +127,7 @@ class Factory:
     def get_classes_df(self):
         import pandas as pd
 
-        df = pd.DataFrame(self._get_classes_list(self._class_files_root_url or Factory.TEMP_PATH),
+        df = pd.DataFrame(self._get_classes_list(self._class_files_root_url or self.TEMP_PATH),
                           columns = ('class_name', 'file_name', 'path')).drop_duplicates()
         df.sort_values(by = ['class_name'], inplace = True)
         df.index = range(len(df))
@@ -141,7 +155,7 @@ class Factory:
 
     @classmethod
     def _get_classes_dict(cls):
-        classes = cls._get_classes_list(Factory.TEMP_PATH)
+        classes = cls._get_classes_list(cls.TEMP_PATH)
 
         return {class_name: {'file_name': file_name, 'path': path}
                 for (class_name, file_name, path) in classes}
@@ -178,7 +192,7 @@ class Factory:
 
         for _, file_name, path in self._get_classes_list(self._class_files_root_url):
             if file_name.endswith('.py'):
-                self._copy_file(path, os.sep.join([Factory.TEMP_PATH, file_name]))
+                self._copy_file(path, os.sep.join([self.TEMP_PATH, file_name]))
 
 
     @staticmethod

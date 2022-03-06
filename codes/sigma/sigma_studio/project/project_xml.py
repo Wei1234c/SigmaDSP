@@ -421,6 +421,13 @@ class IC(_Element):
 
 
     @property
+    def param_register(self):
+        for reg in self.registers.values():
+            if reg.name == 'Param':
+                return reg
+
+
+    @property
     def programs(self):
         return {p.name: p for p in self._programs}
 
@@ -432,13 +439,10 @@ class IC(_Element):
 
     @property
     def parameter_bytes(self):
-        addr_max = max(p.address for p in self._parameters)
-        ba = [bytes(self._cls_numeric.N_BYTES)] * (addr_max + 1)
+        addr_params = {p.address: p.bytes for p in self._parameters}
+        addrs = sorted(addr_params.keys())
 
-        for p in self._parameters:
-            ba[p.address] = p.bytes
-
-        return b''.join(ba)
+        return b''.join([addr_params[addr] for addr in addrs])
 
 
     @property

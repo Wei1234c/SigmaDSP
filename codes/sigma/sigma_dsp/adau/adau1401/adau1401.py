@@ -337,8 +337,9 @@ class ADAU1701(ADAU):
         ADDRESS_MIN = 0x0800
         ADDRESS_MAX = 0x0807
         N_BITS = 32
+        ADDR_INCREMENT = N_BITS // 8
         N_REGISTERS = (ADDRESS_MAX - ADDRESS_MIN + 1)
-        N_BYTES = N_REGISTERS * N_BITS // 8
+        N_BYTES = N_REGISTERS * ADDR_INCREMENT
         REGISTER_NAME_PREFIX = 'Interface Register'
 
 
@@ -398,17 +399,19 @@ class ADAU1701(ADAU):
         ADDRESS_MIN = 0x0809
         ADDRESS_MAX = 0x080C
         N_BITS = 16
+        ADDR_INCREMENT = N_BITS // 8
         N_REGISTERS = (ADDRESS_MAX - ADDRESS_MIN + 1)
-        N_BYTES = N_REGISTERS * N_BITS // 8
+        N_BYTES = N_REGISTERS * ADDR_INCREMENT
         REGISTER_NAME_PREFIX = 'Auxiliary ADC Data'
 
 
     class _ProgramRAM(ADAU._RAM):
-
+        NAME = 'Program Data'
         ADDRESS_MIN = 0x0400
         ADDRESS_MAX = 0x07FF
         N_BITS = 40
-        N_BYTES = (ADDRESS_MAX - ADDRESS_MIN + 1) * N_BITS // 8
+        ADDR_INCREMENT = N_BITS // 8
+        N_BYTES = (ADDRESS_MAX - ADDRESS_MIN + 1) * ADDR_INCREMENT
 
 
     class _ReferenceClock(ADAU._Base):
@@ -568,6 +571,7 @@ class ADAU1701(ADAU):
 
     def _build(self):
         super()._build()
+
         # ====================================
         self.adc = self._ADC(self)
         self.dac = self._DAC(self)
@@ -628,15 +632,6 @@ class ADAU1701(ADAU):
 
     # hardware related IO========= ======================================
 
-    # def _read_addressed_bytes(self, i2c_address, reg_address, n_bytes):
-    #     if not self.is_virtual_device:
-    #         self._bus.writeto(addr = i2c_address,
-    #                           buf = reg_address.to_bytes(2, byteorder = 'big'),
-    #                           stop = False)
-    #         return self._bus.read_bytes(i2c_address = i2c_address, n_bytes = n_bytes)
-    #
-    #     return bytes(n_bytes)
-
     # register related ============================================
     def _read_register(self, register):
         value = self._read_addressed_bytes(self._i2c_address, register.address, register.n_bytes)
@@ -675,7 +670,8 @@ class ADAU1702(ADAU1701):
         ADDRESS_MIN = 0x0400
         ADDRESS_MAX = 0x05FF
         N_BITS = 40
-        N_BYTES = (ADDRESS_MAX - ADDRESS_MIN + 1) * N_BITS // 8
+        ADDR_INCREMENT = N_BITS // 8
+        N_BYTES = (ADDRESS_MAX - ADDRESS_MIN + 1) * ADDR_INCREMENT
 
 
 

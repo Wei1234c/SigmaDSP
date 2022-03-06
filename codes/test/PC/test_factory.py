@@ -7,7 +7,7 @@ from sigma.sigma_dsp.adau.adau1401 import ADAU1401
 from utilities.adapters import peripherals
 
 
-with_hardware_device = False
+with_hardware_device = True
 
 if with_hardware_device:
     ctrl = I2cController()
@@ -57,3 +57,14 @@ gain1.set_dB(0)
 # cell = factory.get_cell_by_name('Volume_Control_out01')
 for cell in cells.values():
     print(cell.properties)
+
+
+dsp.control.load_eeprom_from_file('E2Prom.bin')
+dsp.reload_from_eeprom()
+
+# save_parameters_to_eeprom: save current parameters' value to EEPROM.
+
+tone1 = cells['Tone1']
+tone1.set_frequency(1200)
+factory.save_parameters_to_eeprom()
+dsp.reload_from_eeprom()

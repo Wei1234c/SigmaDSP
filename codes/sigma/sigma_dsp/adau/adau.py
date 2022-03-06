@@ -3,11 +3,11 @@ from math import ceil
 
 try:
     from .. import dsp_processor
-    from ..messages import Message
+    from ..messages import Message, MessageWrite
 
 except:
     import dsp_processor
-    from messages import Message
+    from messages import Message, MessageWrite
 
 SAMPLING_FREQ_DEFAULT = 48000
 
@@ -71,19 +71,33 @@ class ADAU(dsp_processor.Device):
             return self.read(self.N_BYTES)
 
 
+        # Message related ==========================
+
+        @property
+        def message(self):
+            return MessageWrite(subaddress = self.ADDRESS_MIN, data = self.bytes)
+
+
+        @message.setter
+        def message(self, message):
+            assert message.message_type == 'Write'
+            assert message.subaddress == self.ADDRESS_MIN
+            self.write(message.data)
+
+
         # =============================
 
         def clear(self):
             self.write(bytes(self.N_BYTES))
 
 
-        def to_file(self, file_name):
-            with open(file_name, 'wb') as f:
+        def to_file(self, binary_file_name):
+            with open(binary_file_name, 'wb') as f:
                 f.write(self.bytes)
 
 
-        def from_file(self, file_name):
-            with open(file_name, 'rb') as f:
+        def from_file(self, binary_file_name):
+            with open(binary_file_name, 'rb') as f:
                 ba = f.read()
                 self.write(ba)
                 return ba
@@ -94,7 +108,8 @@ class ADAU(dsp_processor.Device):
         ADDRESS_MIN = 0x0000
         ADDRESS_MAX = 0x3FFF
         N_BITS = 8
-        N_BYTES = (ADDRESS_MAX - ADDRESS_MIN + 1) * N_BITS // 8
+        ADDR_INCREMENT = N_BITS // 8
+        N_BYTES = (ADDRESS_MAX - ADDRESS_MIN + 1) * ADDR_INCREMENT
         N_BYTES_PER_PAGE = 32
 
         ADDRESS_INTERFACE_REGISTERS_MIN = 32
@@ -127,6 +142,16 @@ class ADAU(dsp_processor.Device):
 
 
         @property
+        def message(self):
+            raise NotImplementedError
+
+
+        @message.setter
+        def message(self, message):
+            raise NotImplementedError
+
+
+        @property
         def messages(self):
             return self._parent.control.messages_from_bytes(self.read(self.N_BYTES))
 
@@ -137,16 +162,55 @@ class ADAU(dsp_processor.Device):
 
 
         @property
+        def params_message(self):
+            for message in self.messages:
+                if message.message_type == 'Write' and \
+                        message.subaddress == self._parent.parameter_ram.ADDRESS_MIN:
+                    return message
+
+
+        @property
         def bytes(self):
             return self.messages.bytes
 
 
+        def save_parameters(self, data_bytes):
+            messages = self.messages
+
+            for message in messages:
+                if message.message_type == 'Write' and \
+                        message.subaddress == self._parent.parameter_ram.ADDRESS_MIN:
+
+                    assert len(data_bytes) == len(message.data)
+
+                    message.data = data_bytes
+
+                    self.write(messages.bytes)
+                    return
+
+            # message for parameters not exits.
+            message = MessageWrite(subaddress = self._parent.parameter_ram.ADDRESS_MIN, data = data_bytes)
+            messages.append(message)
+
+            self.write(messages.bytes)
+            return
+
+
+        # serialization =====================================
+
+        def to_file(self, binary_file_name):
+            with open(binary_file_name, 'wb') as f:
+                f.write(self.messages.bytes)
+
+
     class _ParameterRAM(_RAM):
 
+        NAME = 'Param'
         ADDRESS_MIN = 0x0000
         ADDRESS_MAX = 0x03FF
         N_BITS = 32
-        N_BYTES = (ADDRESS_MAX - ADDRESS_MIN + 1) * N_BITS // 8
+        ADDR_INCREMENT = N_BITS // 8
+        N_BYTES = (ADDRESS_MAX - ADDRESS_MIN + 1) * ADDR_INCREMENT
 
         SAFELOAD_REGISTERS_PAIRS = ((0x0815, 0x0810),
                                     (0x0816, 0x0811),
@@ -237,7 +301,7 @@ class ADAU(dsp_processor.Device):
         N_BYTES_CONTROL_REGISTER = 2
 
 
-        # eeprom messages operations ===================
+        # Messages operations ===================
         @classmethod
         def messages_from_bytes(cls, message_bytes):
             return Message.messages_from_bytes(message_bytes)
@@ -248,15 +312,33 @@ class ADAU(dsp_processor.Device):
                 self._parent.write_addressed_bytes(message.subaddress, message.data)
 
 
+        # eeprom operations ===================
+
         def reload_from_eeprom(self):
             for message in self._parent.eeprom.messages:
                 self.write_message(message)
 
 
+        def load_eeprom_from_file(self, binary_file_name):
+            self._parent.eeprom.from_file(binary_file_name)
+
+
+        def dump_eeprom_to_file(self, binary_file_name):
+            self._parent.eeprom.to_file(binary_file_name)
+
+
+        def save_parameters_to_eeprom(self, data_bytes):
+            self._parent.eeprom.save_parameters(data_bytes)
+
+
+        # text file operations ===================
+
         def load_SigmaStudio_files(self, file_NumBytes, file_TxBuffer):
             for message in Message.messages_from_SigmaStudio_files(file_NumBytes, file_TxBuffer):
                 self.write_message(message)
 
+
+        # XML operations ===================
 
         def write_xml_register(self, register):  # register: project_xml.Register
             self._parent.write_addressed_bytes(register.address, register.bytes)
@@ -283,6 +365,7 @@ class ADAU(dsp_processor.Device):
         self.parameter_ram = self._ParameterRAM(self)
         self.eeprom = self._EEPROM(self, self.I2C_ADDRESS_EEPROM)
         self.N_BYTES_PER_PARAMETER = self.DspNumber.N_BYTES
+
         # ====================================    
 
 
@@ -301,8 +384,8 @@ class ADAU(dsp_processor.Device):
     def status(self):
         return
 
-        # encapsulated hardware functions =======================
 
+    # encapsulated hardware functions =======================
 
     def read_parameter(self, *args, **kwargs):
         return self.parameter_ram.read_parameter(*args, **kwargs)

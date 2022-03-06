@@ -6,7 +6,7 @@ from sigma.sigma_studio.toolbox.cells.sources.oscillators import *
 from utilities.adapters import peripherals
 
 
-with_hardware_device = False
+with_hardware_device = True
 
 if with_hardware_device:
     ctrl = I2cController()
@@ -36,6 +36,10 @@ print(cell.name)
 print(cell.PARAMETER_SHORT_NAMES)
 
 cell.enable(False)
+
+
+
+print()
 # print(cell.get_coefficients())
 # cell.get_table()
 # cell.set_coefficients(
@@ -47,7 +51,7 @@ cell.enable(False)
 # cell.set_hold_time(10)
 # p = cell.get_param('slope_1')
 # print(p.numbers)
-cell.set_frequency(12000)
+cell.set_frequency(1200)
 # table = cell.get_table()
 # cell.set_table([1.0, 2.0, 3.0, 4.0, 5.0, 1.0])
 # print(table.numbers)
