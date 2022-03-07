@@ -1,63 +1,9 @@
-Cell Name         = Gain1
-Parameter Name    = Gain1940AlgNS1
-Parameter Address = 2
-Parameter Value   = 1
-Parameter Data :
-0x00, 0x80, 0x00, 0x00, 
-
-
-
-Cell Name         = Gain1
-Parameter Name    = Gain1940AlgNS2
-Parameter Address = 3
-Parameter Value   = 1
-Parameter Data :
-0x00, 0x80, 0x00, 0x00, 
-
-
-
-Cell Name         = Gain1
-Parameter Name    = Gain1940AlgNS3
-Parameter Address = 2
-Parameter Value   = 1
-Parameter Data :
-0x00, 0x80, 0x00, 0x00, 
-
-
-
-Cell Name         = W Noise1
-Parameter Name    = WhiteNAlgNew1enable
-Parameter Address = 0
-Parameter Value   = 0
-Parameter Data :
-0x00, 0x00, 0x00, 0x00, 
-
-
-
-Cell Name         = W Noise1
-Parameter Name    = WhiteNAlgNew1mxx
-Parameter Address = 1
-Parameter Value   = 345675
-Parameter Data :
-0x00, 0x05, 0x46, 0x4B, 
-
-
-
-Cell Name         = W Noise1
-Parameter Name    = WhiteNAlgNew1mxx
-Parameter Address = 1
-Parameter Value   = 345675
-Parameter Data :
-0x00, 0x05, 0x46, 0x4B, 
-
-
-
 Cell Name         = W Noise2
 Parameter Name    = WhiteNAlgNew2enable
 Parameter Address = 0
-Parameter Value   = 0
+Parameter Value   = 1
 Parameter Data :
-0x00, 0x00, 0x00, 0x00, 
+0x00, 0x80, 0x00, 0x00, 
 
 
 
@@ -81,10 +27,10 @@ Parameter Data :
 
 Parameter data for: IC 1 (Hexadecimal format starting at parameter address 0)
 See also Design 1.hex file
-0x00 , 	0x00 , 	0x00 , 	0x00 , 	
+0x00 , 	0x80 , 	0x00 , 	0x00 , 	
 0x00 , 	0x05 , 	0x46 , 	0x4B , 	
-0x00 , 	0x80 , 	0x00 , 	0x00 , 	
-0x00 , 	0x80 , 	0x00 , 	0x00 , 	
+0x00 , 	0x00 , 	0x00 , 	0x00 , 	
+0x00 , 	0x00 , 	0x00 , 	0x00 , 	
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
@@ -1107,10 +1053,10 @@ See also Design 1.hex file
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
 
 Parameter data for: IC 1 (Binary format starting at parameter address 0)
-00000000	00000000	00000000	00000000	
+00000000	10000000	00000000	00000000	
 00000000	00000101	01000110	01001011	
-00000000	10000000	00000000	00000000	
-00000000	10000000	00000000	00000000	
+00000000	00000000	00000000	00000000	
+00000000	00000000	00000000	00000000	
 00000000	00000000	00000000	00000000	
 00000000	00000000	00000000	00000000	
 00000000	00000000	00000000	00000000	
@@ -2135,8 +2081,8 @@ Parameter data for: IC 1 (Binary format starting at parameter address 0)
 Parameter data for: IC 2 (Hexadecimal format starting at parameter address 0)
 See also Design 1.hex file
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
-0x00 , 	0x05 , 	0x46 , 	0x4B , 	
-0x00 , 	0x80 , 	0x00 , 	0x00 , 	
+0x00 , 	0x00 , 	0x00 , 	0x00 , 	
+0x00 , 	0x00 , 	0x00 , 	0x00 , 	
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
@@ -3161,8 +3107,8 @@ See also Design 1.hex file
 
 Parameter data for: IC 2 (Binary format starting at parameter address 0)
 00000000	00000000	00000000	00000000	
-00000000	00000101	01000110	01001011	
-00000000	10000000	00000000	00000000	
+00000000	00000000	00000000	00000000	
+00000000	00000000	00000000	00000000	
 00000000	00000000	00000000	00000000	
 00000000	00000000	00000000	00000000	
 00000000	00000000	00000000	00000000	

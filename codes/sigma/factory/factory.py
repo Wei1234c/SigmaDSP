@@ -1,51 +1,28 @@
 import os
-import sys
 
 
 try:
-    from .sigma_studio.project.project_xml import get_ICs
+    from ..sigma_studio.project.project_xml import get_ICs
+    from . import ufactory
 
 except:
     from project_xml import get_ICs
+    import ufactory
 
 
 
-class Factory:
+class Factory(ufactory.Factory):
     TEMP_PATH = 'temp'
+    CLASSES_DICT_FILE = 'classes_dict.json'
 
 
     def __init__(self, project_xml_file_url = None, class_files_root_url = None, dsp = None):
+        super().__init__(project_xml_file_url = project_xml_file_url, dsp = dsp)
 
-        self.project_xml_file_url = project_xml_file_url
         self.class_files_root_url = class_files_root_url
-        self.dsp = dsp
-
-        if self.TEMP_PATH not in sys.path:
-            sys.path.append(self.TEMP_PATH)
-
-
-    def __enter__(self):
-        return self
-
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.__del__()
-
-
-    def __del__(self):
-        self._classes_dict = None
-        self.dsp = None
 
 
     # XML =====================================================
-    def get_ic(self, ic_idx = 0):
-        assert self.project_xml_file_url is not None, \
-            "Need 'project_xml_file_url': project's XML file."
-
-        cls_numeric = self.dsp.DspNumber if self.dsp is not None else None
-
-        return get_ICs(self.project_xml_file_url, cls_numeric = cls_numeric)[ic_idx]
-
 
     def save_parameters_to_eeprom(self, ic_idx = 0):
         ic = self.get_ic(ic_idx)
@@ -62,41 +39,13 @@ class Factory:
 
 
     # Toolbox Cell ============================================
-    def get_cells(self, ic_idx = 0):
 
-        ic = self.get_ic(ic_idx)
-        cells = {}
-
-        for module in ic.modules.values():
-            cell_object = self._get_cell(module, self._classes_dict)
-            cells[module.name] = cell_object
-
-        return cells
-
-
-    def get_cell_by_name(self, cell_name, ic_idx = 0):
-
-        ic = self.get_ic(ic_idx)
-        xml_module = ic.modules[cell_name]
-
-        return self._get_cell(xml_module, self._classes_dict)
-
-
-    def get_cells_manifest(self, ic_idx = 0):
-
-        def trim(cell_name):
-            return cell_name.lower().replace(' ', '_').replace('-', '_')
-
-
-        return sorted([f"{trim(cell.name)} = cells['{cell.name}']  # {cell.description}"
-                       for cell in self.get_cells(ic_idx).values()])
-
-
-    def show_methods(self, ic_idx = 0, print_out = True):
+    def show_methods(self, ic = None, print_out = True):
         import json
 
+        ic = self.get_ic() if ic is None else ic
         methods = {cell.name: json.loads(cell.show_methods(print_out = False))
-                   for cell in self.get_cells(ic_idx).values()}
+                   for cell in self.get_cells(ic).values()}
 
         json_str = json.dumps(methods, indent = 4, sort_keys = False)
 
@@ -121,12 +70,12 @@ class Factory:
             os.mkdir(self.TEMP_PATH)
 
         if url is not None:
-            self._copy_files()
-
-        self._classes_dict = self._get_classes_dict()
+            self._copy_classes_files()
+            self._gen_classes_dict_json()
 
 
     def get_classes_df(self):
+
         import pandas as pd
 
         df = pd.DataFrame(self._get_classes_list(self._class_files_root_url or self.TEMP_PATH),
@@ -144,31 +93,31 @@ class Factory:
 
     # private functions ==================================
 
-    # Toolbox Cell ========================================
-    def _get_cell(self, xml_module, classes_dict):  # module: project_xml.Module
-
-        class_name = xml_module.algorithm_name
-        py_module_name = classes_dict[class_name]['file_name'].replace('.py', '')
-
-        cls = getattr(__import__(f'{py_module_name}'), class_name)
-        cell_object = cls(module = xml_module, dsp = self.dsp)
-
-        return cell_object
-
-
     # classes =================================
+
     @classmethod
-    def _get_classes_dict(cls):
+    def _gen_classes_dict_json(cls):
+        import json
+
+        json_str = json.dumps(cls._gen_classes_dict(), indent = 4, sort_keys = False)
+
+        with open(os.sep.join([cls.TEMP_PATH, cls.CLASSES_DICT_FILE]), 'wt') as f:
+            f.write(json_str)
+
+        return json_str
+
+
+    @classmethod
+    def _gen_classes_dict(cls):
         classes = cls._get_classes_list(cls.TEMP_PATH)
 
-        return {class_name: {'file_name': file_name, 'path': path}
-                for (class_name, file_name, path) in classes}
+        return {class_name: file_name.replace('.py', '') for (class_name, file_name, _) in classes}
 
 
     @classmethod
     def _get_classes_list(cls, files_root_url):
 
-        class_names = []
+        classes = []
 
         for path in cls._get_all_files(files_root_url):
             file_name = path.split(os.sep)[-1]
@@ -177,9 +126,9 @@ class Factory:
                 for line in f.readlines():
                     class_name = cls._get_class_name(line)
                     if class_name is not None:
-                        class_names.append((class_name, file_name, path))
+                        classes.append((class_name, file_name, path))
 
-        return class_names
+        return classes
 
 
     @staticmethod
@@ -194,7 +143,7 @@ class Factory:
 
     # files =================================
 
-    def _copy_files(self):
+    def _copy_classes_files(self):
 
         for _, file_name, path in self._get_classes_list(self._class_files_root_url):
             if file_name.endswith('.py'):

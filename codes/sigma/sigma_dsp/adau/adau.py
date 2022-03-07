@@ -142,14 +142,11 @@ class ADAU(dsp_processor.Device):
 
 
         @property
-        def message(self):
-            raise NotImplementedError
+        def bytes(self):
+            return self.messages.bytes
 
 
-        @message.setter
-        def message(self, message):
-            raise NotImplementedError
-
+        # message ==========================================
 
         @property
         def messages(self):
@@ -159,42 +156,6 @@ class ADAU(dsp_processor.Device):
         @messages.setter
         def messages(self, messages):
             self.write(messages.bytes)
-
-
-        @property
-        def params_message(self):
-            for message in self.messages:
-                if message.message_type == 'Write' and \
-                        message.subaddress == self._parent.parameter_ram.ADDRESS_MIN:
-                    return message
-
-
-        @property
-        def bytes(self):
-            return self.messages.bytes
-
-
-        def save_parameters(self, data_bytes):
-            messages = self.messages
-
-            for message in messages:
-                if message.message_type == 'Write' and \
-                        message.subaddress == self._parent.parameter_ram.ADDRESS_MIN:
-                    assert len(data_bytes) == len(message.data)
-
-                    message.data = data_bytes
-                    self.write(messages.bytes)
-                    return
-
-            messages.append(MessageWrite(subaddress = self._parent.parameter_ram.ADDRESS_MIN, data = data_bytes))
-            self.write(messages.bytes)
-
-
-        # serialization =====================================
-
-        def to_file(self, binary_file_name):
-            with open(binary_file_name, 'wb') as f:
-                f.write(self.messages.bytes)
 
 
     class _ParameterRAM(_RAM):
@@ -214,7 +175,9 @@ class ADAU(dsp_processor.Device):
         N_SAFELOAD_REGISTERS = len(SAFELOAD_REGISTERS_PAIRS)
         N_BYTES_SAFELOAD_ADDRESS_REGISTERS = 2
         N_BYTES_SAFELOAD_DATA_REGISTERS = 5
-        bit_idx_IST = 5
+        IST_REGISTER_ADDRESS = 0x081C
+        N_BYTES_IST_REGISTER = 2
+        IST_BIT_IDX = 5
 
 
         def __init__(self, parent, i2c_address = None):
@@ -227,6 +190,7 @@ class ADAU(dsp_processor.Device):
             return self.N_SAFELOAD_REGISTERS * self._parent.N_BYTES_PER_PARAMETER
 
 
+        # parameter =================================
         def read_parameter(self, param):  # param: project_xml.Parameter
             if not self._parent.is_virtual_device:
                 return self.read(n_bytes = param.size, address = param.address)
@@ -247,6 +211,7 @@ class ADAU(dsp_processor.Device):
                                    send_now = send_now)
 
 
+        # safe load =================================
         def safe_load(self, param_address, data_bytes, send_now = True):
             n_bytes_pre_pend = self.N_BYTES_SAFELOAD_DATA_REGISTERS - len(data_bytes)
             data_bytes = b''.join([bytes(n_bytes_pre_pend), data_bytes])
@@ -278,11 +243,11 @@ class ADAU(dsp_processor.Device):
 
 
         def initiate_safeload_transfer(self):
-            address = self._parent.control.CONTROL_REGISTER_ADDRESS
-            n_bytes = self._parent.control.N_BYTES_CONTROL_REGISTER
+            address = self.IST_REGISTER_ADDRESS
+            n_bytes = self.N_BYTES_IST_REGISTER
 
             value = int.from_bytes(self._parent.read_addressed_bytes(address, n_bytes), 'big')
-            ba = (value | (1 << self.bit_idx_IST)).to_bytes(n_bytes, 'big')
+            ba = (value | (1 << self.IST_BIT_IDX)).to_bytes(n_bytes, 'big')
 
             self._parent.write_addressed_bytes(address, ba)
 
@@ -291,8 +256,6 @@ class ADAU(dsp_processor.Device):
         SAMPLING_RATE_Hz = {44100: 0, 48000: 0, 96000: 1, 192000: 2}
         SAMPLING_RATE_RATIO = {1: 0, 2: 1, 4: 2}
         SAMPLING_RATE_RATIO_value_key = {v: k for k, v in SAMPLING_RATE_RATIO.items()}
-        CONTROL_REGISTER_ADDRESS = 0x081C
-        N_BYTES_CONTROL_REGISTER = 2
 
 
         # Messages operations ===================
@@ -308,39 +271,9 @@ class ADAU(dsp_processor.Device):
 
         # eeprom operations ===================
 
-        def load_eeprom_from_file(self, binary_file_name):
-            self._parent.eeprom.from_file(binary_file_name)
-
-
-        def dump_eeprom_to_file(self, binary_file_name):
-            self._parent.eeprom.to_file(binary_file_name)
-
-
         def reload_from_eeprom(self):
             for message in self._parent.eeprom.messages:
                 self.write_message(message)
-
-
-        def save_parameters_to_eeprom(self, data_bytes):
-            self._parent.eeprom.save_parameters(data_bytes)
-
-
-        # text file operations ===================
-
-        def load_SigmaStudio_files(self, file_NumBytes, file_TxBuffer):
-            for message in Message.messages_from_SigmaStudio_files(file_NumBytes, file_TxBuffer):
-                self.write_message(message)
-
-
-        # XML operations ===================
-
-        def write_xml_register(self, register):  # register: project_xml.Register
-            self._parent.write_addressed_bytes(register.address, register.bytes)
-
-
-        def write_xml_ic(self, ic):  # ic: project_xml.IC
-            for reg in ic._programs + ic._registers:
-                self.write_xml_register(reg)
 
 
     def __init__(self, bus, i2c_address = I2C_ADDRESS, sample_rate = None, **kwargs):

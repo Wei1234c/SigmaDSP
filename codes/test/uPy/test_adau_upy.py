@@ -1,10 +1,20 @@
+import gc
 import os
+import sys
+
+
+
+def collect_garbage():
+    gc.collect()
+    if sys.platform == 'esp32':
+        print('[Memory - free: {}   allocated: {}]'.format(gc.mem_free(), gc.mem_alloc()))
+
 
 
 try:
     from utilities.adapters import peripherals
     from sigma.sigma_dsp.adau import ADAU
-    from sigma.factory import Factory
+    from sigma.factory.ufactory import Factory
     from bridges.ftdi.controllers.i2c import I2cController
     from bridges.interfaces.micropython.machine import Pin
 
@@ -32,7 +42,7 @@ except:
     #  for ESP32 ===========================
     import peripherals
     from adau import ADAU
-    from factory import Factory
+    from ufactory import Factory
 
 
     with_hardware_device = True
@@ -69,11 +79,23 @@ dsp.write_parameter(param)
 print(dsp.read_parameter(param))
 
 # ======================================
+# from test_adau_upy import dsp
 
+factory = Factory(project_xml_file_url = project_xml_file_url,
+                  dsp = dsp
+                  )
 
+print('factory ready.')
+# print(factory.classes_dict)
+
+# cells = factory.get_cells()
+# cell = factory.get_cell_by_name('Volume_Control_out01')
+# cell.show_methods()
+
+#
 # factory = Factory(project_xml_file_url = project_xml_file_url,
 #                   # class_files_root_url = class_files_root_url,
 #                   dsp = dsp
 #                   )
 #
-# print(factory.get_ic().df)
+# print(factory._get_classes_dict())

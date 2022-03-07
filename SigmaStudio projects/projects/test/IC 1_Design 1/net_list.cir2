@@ -1,14 +1,2 @@
-0 WhiteNAlgNew1 O_C47_A0_P1_out Link0
-1 ICSigma100In1 O_C117_A0_P1_out Link3 O_C117_A0_P2_out Link5
-2 DCInpAlg1
-3 monomux1940ns2 I_C391_A0_P2_in Link0 I_C391_A0_P3_in Link3 I_C391_A0_P4_in Link5 O_C391_A0_P1_out Link4
-4 MuteSWSlewAlg1 I_C173_A0_P1_in Link4 O_C173_A0_P2_out Link6
-5 Gain1940AlgNS1 I_C101_A0_P1_in Link6 O_C101_A0_P2_out Link9
-6 FIRFiltAlg1 I_C384_A0_P1_in Link9 O_C384_A0_P2_out Link2
-7 MonoNoPostGainNoHoldNoDelay1 I_C354_A0_P1_in Link9 O_C354_A0_P2_out Link7
-8 StMuxSwSlew1 I_C30_A0_P3_in Link9 I_C30_A0_P4_in Link9 I_C30_A0_P5_in Link9 I_C30_A0_P6_in Link9
-9 monomux1940ns3 I_C54_A0_P2_in Link9 I_C54_A0_P3_in Link9 I_C54_A0_P4_in Link9
-10 monomux1940ns1 I_C244_A0_P2_in Link2 I_C244_A0_P3_in Link9 I_C244_A0_P4_in Link7 O_C244_A0_P1_out Link1
-11 SWGain1940DBAlg1 I_C130_A0_P1_in Link1 O_C130_A0_P2_out Link8
-12 ICSigma100Out1 I_C19_A0_P1_in Link8
-13 ICSigma100Out2 I_C69_A0_P1_in Link8
+0 WhiteNAlgNew2 O_C13_A0_P1_out Link0
+1 ICSigma100Out1 I_C29_A0_P1_in Link0

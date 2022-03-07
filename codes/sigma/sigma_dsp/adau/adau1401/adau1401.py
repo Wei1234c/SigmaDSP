@@ -17,9 +17,86 @@ except:
 
 
 class ADAU1701(ADAU):
-    class _Control(ADAU._Control):
-        CONTROL_REGISTER_ADDRESS = 0x081C
+    class _EEPROM(ADAU._EEPROM):
 
+        # message ==========================================
+        @property
+        def message(self):
+            raise NotImplementedError
+
+
+        @message.setter
+        def message(self, message):
+            raise NotImplementedError
+
+
+        @property
+        def params_message(self):
+            for message in self.messages:
+                if message.message_type == 'Write' and \
+                        message.subaddress == self._parent.parameter_ram.ADDRESS_MIN:
+                    return message
+
+
+        def generate_messages(self, segments_head, segments_tail):
+            messages = [MessageWrite(subaddress = addr, data = data) for addr, data in segments_head]
+            messages.extend([Message(message_type = 'No operation executed')] *
+                            (self.ADDRESS_INTERFACE_REGISTERS_MIN - sum(len(m.bytes) for m in messages) -
+                             MessageWrite_SUBADDRESS_SLICE.stop))
+            messages.extend([MessageWrite(subaddress = addr, data = data) for addr, data in segments_tail])
+            messages.append(Message(message_type = 'End and wait for writeback'))
+            messages.append(Message(message_type = 'End'))
+
+            return messages
+
+
+        def save_as_message(self, address, data_bytes):
+            messages = self.messages
+
+            for message in messages:
+                if message.message_type == 'Write' and \
+                        message.subaddress == address:
+                    assert len(data_bytes) == len(message.data)
+
+                    message.data = data_bytes
+                    self.write(messages.bytes)
+                    return
+
+            messages.append(MessageWrite(subaddress = address, data = data_bytes))
+            self.write(messages.bytes)
+
+
+        # serialization =====================================
+
+        def to_file(self, binary_file_name):
+            with open(binary_file_name, 'wb') as f:
+                f.write(self.messages.bytes)
+
+
+        # ===================================================
+        def enable_write(self, value = True):
+            if self._parent._pin_write_protect is not None:
+                self._parent._pin_write_protect.value(0 if value else 1)
+
+
+    class _ParameterRAM(ADAU._ParameterRAM):
+
+        def safe_loads(self, param_address, data_bytes):
+            assert self.safeload_done, 'Previous safeload is still on going.'
+
+            super().safe_loads(param_address = param_address, data_bytes = data_bytes)
+
+
+        def initiate_safeload_transfer(self):
+            self._parent._write_element_by_name('IST', 1)
+
+
+        @property
+        def safeload_done(self):
+            return self._parent._read_element_by_name('IST').value == 0
+
+
+    class _Control(ADAU._Control):
 
         # ======================
         def power_down_voltage_reference(self, value = True):
@@ -100,43 +177,38 @@ class ADAU1701(ADAU):
             return self.sampling_ratio == 4
 
 
-    class _EEPROM(ADAU._EEPROM):
+        # eeprom operations ===================
 
-        def enable_write(self, value = True):
-            if self._parent._pin_write_protect is not None:
-                self._parent._pin_write_protect.value(0 if value else 1)
-
-
-        def generate_messages(self, segments_head, segments_tail):
-            messages = [MessageWrite(subaddress = addr, data = data) for addr, data in segments_head]
-            messages.extend([Message(message_type = 'No operation executed')] *
-                            (self.ADDRESS_INTERFACE_REGISTERS_MIN - sum(len(m.bytes) for m in messages) -
-                             MessageWrite_SUBADDRESS_SLICE.stop))
-            messages.extend([MessageWrite(subaddress = addr, data = data) for addr, data in segments_tail])
-            messages.append(Message(message_type = 'End and wait for writeback'))
-            messages.append(Message(message_type = 'End'))
-
-            return messages
+        def load_eeprom_from_file(self, binary_file_name):
+            self._parent.eeprom.from_file(binary_file_name)
 
 
-    class _ParameterRAM(ADAU._ParameterRAM):
-
-        def safe_loads(self, param_address, data_bytes):
-            assert self.safeload_done, 'Previous safeload is still on going.'
-
-            super().safe_loads(param_address = param_address, data_bytes = data_bytes)
+        def dump_eeprom_to_file(self, binary_file_name):
+            self._parent.eeprom.to_file(binary_file_name)
 
 
-        def initiate_safeload_transfer(self):
-            self._parent._write_element_by_name('IST', 1)
+        def save_parameters_to_eeprom(self, data_bytes):
+            self._parent.eeprom.save_as_message(address = self._parent.parameter_ram.ADDRESS_MIN,
+                                                data_bytes = data_bytes)
 
 
-        @property
-        def safeload_done(self):
-            return self._parent._read_element_by_name('IST').value == 0
+        # text file operations ===================
+
+        def load_SigmaStudio_files(self, file_NumBytes, file_TxBuffer):
+            for message in Message.messages_from_SigmaStudio_files(file_NumBytes, file_TxBuffer):
+                self.write_message(message)
 
 
-    # =================
+        # XML operations ===================
+
+        def write_xml_register(self, register):  # register: project_xml.Register
+            self._parent.write_addressed_bytes(register.address, register.bytes)
+
+
+        def write_xml_ic(self, ic):  # ic: project_xml.IC
+            for reg in ic._programs + ic._registers:
+                self.write_xml_register(reg)
+
 
     class _ADC(ADAU._Base):
 

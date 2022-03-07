@@ -7,7 +7,7 @@ from sigma.sigma_dsp.adau.adau1401 import ADAU1401
 from utilities.adapters import peripherals
 
 
-with_hardware_device = False
+with_hardware_device = False  # set True if hardware is connected.
 
 if with_hardware_device:
     ctrl = I2cController()
@@ -30,41 +30,48 @@ project_xml_file_url = os.sep.join(['..', '..', '..', 'SigmaStudio projects', 'p
 class_files_root_url = os.sep.join(['..', '..', 'sigma', 'sigma_studio', 'toolbox', 'cells'])
 
 factory = Factory(project_xml_file_url = project_xml_file_url,
-                  class_files_root_url = class_files_root_url,
+                  # class_files_root_url = class_files_root_url,
                   dsp = dsp
                   )
 
+print(factory.classes_dict)
+
 print(factory.get_ic().df)
-cells = factory.get_cells()
-factory.show_methods()
-
-for o in factory.get_cells_manifest():
-    print(o)
-
-gain1 = cells['Gain_in0']
-gain1.set_dB(0)
-
-# print(factory.get_classes_df())
-# tone1 = cells['Tone1_2']
-# tone1.set_frequency(440)
-# print(factory.get_classes_dict(cells_root_url))
-
-# from class import
-# __import__(class_path)
+ic = factory.get_ic(ic_idx = 0)
+cells = factory.get_cells(ic)
+# factory.show_methods()
 #
-# setattr(self, module_name, __import__(module_name))
-
-# cell = factory.get_cell_by_name('Volume_Control_out01')
-for cell in cells.values():
-    print(cell.properties)
-
-
-dsp.control.load_eeprom_from_file('E2Prom.bin')
-dsp.reload_from_eeprom()
-
-# save_parameters_to_eeprom: save current parameters' value to EEPROM.
-
-tone1 = cells['Tone1']
-tone1.set_frequency(1200)
-factory.save_parameters_to_eeprom()
-dsp.reload_from_eeprom()
+# for o in factory.get_cells_manifest():
+#     print(o)
+#
+# gain1 = cells['Gain_in0']
+# gain1.set_dB(0)
+#
+# # print(factory.get_classes_df())
+# # tone1 = cells['Tone1_2']
+# # tone1.set_frequency(440)
+# # print(factory.get_classes_dict(cells_root_url))
+#
+# # from class import
+# # __import__(class_path)
+# #
+# # setattr(self, module_name, __import__(module_name))
+#
+cell = factory.get_cell_by_name('Volume_Control_out01')
+# for cell in cells.values():
+#     print(cell.properties)
+#
+# dsp.control.load_eeprom_from_file('E2Prom.bin')
+# dsp.reload_from_eeprom()
+#
+# # save_parameters_to_eeprom: save current parameters' value to EEPROM.
+#
+# tone1 = cells['Tone1']
+#
+# tone1.set_frequency(1200)
+# factory.save_parameters_to_eeprom()
+# dsp.reload_from_eeprom()
+#
+# tone1.set_frequency(110)
+# factory.save_parameters_to_eeprom()
+# dsp.reload_from_eeprom()

@@ -18,23 +18,10 @@
     <IC name=" IC 1 " type="ADAU1401">
         <Schematic>
             <Algorithm name="WhiteNAlgNew2" friendlyname="White Noise " cell="W Noise2 " location="{X=207, Y=119} " Growth="0 " GrowthB="0">
-                <Link pin="O_C13_A0_P1_out" dir="out" link="Link1" />
+                <Link pin="O_C13_A0_P1_out" dir="out" link="Link0" />
             </Algorithm>
-            <Algorithm name="Gain1940AlgNS1" friendlyname="Gain (no slew) " cell="Gain1 " location="{X=540, Y=197} " Growth="0 " GrowthB="0">
-                <Link pin="I_C4_A0_P1_in" dir="in" link="Link1" />
-            </Algorithm>
-            <Algorithm name="Gain1940AlgNS2" friendlyname="Gain (no slew) " cell="Gain1 " location="{X=540, Y=197} " Growth="0 " GrowthB="0">
-                <Link pin="I_C4_A1_P1_in" dir="in" link="Link1" />
-            </Algorithm>
-        </Schematic>
-    </IC>
-    <IC name=" IC 2 " type="ADAU1702">
-        <Schematic>
-            <Algorithm name="WhiteNAlgNew1" friendlyname="White Noise " cell="W Noise1 " location="{X=171, Y=209} " Growth="0 " GrowthB="0">
-                <Link pin="O_C11_A0_P1_out" dir="out" link="Link0" />
-            </Algorithm>
-            <Algorithm name="Gain1940AlgNS3" friendlyname="Gain (no slew) " cell="Gain1 " location="{X=540, Y=197} " Growth="0 " GrowthB="0">
-                <Link pin="I_C4_A2_P1_in" dir="in" link="Link0" />
+            <Algorithm name="ICSigma100Out1" friendlyname="170x\140x output " cell="Output1 " location="{X=336, Y=130} " Growth="0 " GrowthB="0">
+                <Link pin="I_C29_A0_P1_in" dir="in" link="Link0" />
             </Algorithm>
         </Schematic>
     </IC>

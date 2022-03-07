@@ -1,8 +1,8 @@
 /*
  * File:           C:\Users\Wei\Dropbox\Coding\notebooks\專案\待處理\SigmaDSP\bitbucket\github\SigmaStudio projects\projects\test\Design 1_IC_2_REG.h
  *
- * Created:        Saturday, March 5, 2022 3:59:36 PM
- * Description:    :IC 2 control register definitions.
+ * Created:        Monday, March 7, 2022 3:03:31 PM
+ * Description:    Design 1:IC 2 control register definitions.
  *
  * This software is distributed in the hope that it will be useful,
  * but is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
