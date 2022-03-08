@@ -22,8 +22,8 @@ class Factory(ufactory.Factory):
 
     # XML =====================================================
 
-    def save_parameters_to_eeprom(self, ic_idx = 0):
-        ic = self.get_ic(ic_idx)
+    def save_parameters_to_eeprom(self, ic = None):
+        ic = self.get_ic() if ic is None else ic
         self.read_all_parameters(ic)  # refresh values
         self.dsp.control.save_parameters_to_eeprom(ic.parameter_bytes)
 

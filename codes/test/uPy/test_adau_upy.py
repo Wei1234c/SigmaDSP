@@ -86,14 +86,29 @@ factory = Factory(project_xml_file_url = project_xml_file_url,
                   )
 
 print('factory ready.')
-# print(factory.classes_dict)
+
+# ==============================
 
 
-# from test_adau_upy import factory, collect_garbage
-# collect_garbage()
-#
-# collect_garbage()
-# ic = factory.get_ic()
-#
-# collect_garbage()
-# cell = factory.get_cell_by_name('Tone1', ic)
+from test_adau_upy import factory, collect_garbage
+
+
+collect_garbage()
+
+collect_garbage()
+ic = factory.get_ic()
+
+p = ic.parameters['sin_lookupAlg19401ison']
+p.dumps()
+p.value
+p.set_value(2)
+p.value
+factory.dsp.write_parameter(p)
+
+# ==============================
+
+
+collect_garbage()
+cell = factory.get_cell_by_name('Tone1', ic)
+
+# ==============================
