@@ -1,4 +1,5 @@
 import json
+import os
 
 
 try:
@@ -29,6 +30,24 @@ def findall(element, tag):
             matches.extend(findall(child, tag))
 
     return matches
+
+
+
+def trim_xml(file_name):
+    file_name_ext = file_name.split(os.sep)[-1].split('.')
+    file_name_to = f'{file_name_ext[0]}_trimed.{file_name_ext[1]}'
+
+    with open(file_name, 'rt', encoding = 'utf8') as f:
+        root = ET.parse(f).getroot()
+
+    for ic in findall(root, 'IC'):
+        for i in range(len(ic))[::-1]:
+            if ic[i].tag in ('Register', 'Program'):
+                ic._children.pop(i)
+
+    with open(file_name_to, 'tw', encoding = 'utf8') as f:
+        root.write(f)
+        f.write('\n')
 
 
 
@@ -116,6 +135,8 @@ class Parameter(_Element):
 
         self._cls_numeric = self.parent.parent.parent._cls_numeric
         self._load_data()
+
+        self._ele = None
 
 
     def __del__(self):
@@ -236,6 +257,8 @@ class Algorithm(_Element):
         self._parameters = list(Parameter(ele, self) for ele in self.findall('ModuleParameter'))
         self._parameters.extend((Parameter(ele, self) for ele in self.findall('Table')))
 
+        self._ele = None
+
 
     @property
     def properties(self):
@@ -280,22 +303,27 @@ class Algorithm(_Element):
 
     @property
     def df(self):
-        import pandas as pd
 
-        my_dict = json.loads(self.dumps())
-        df = pd.DataFrame(my_dict['parameters'])
+        try:
+            import pandas as pd
 
-        df['algorithm_name'] = my_dict['algorithm_name']
-        # df['algorithm_full_name'] = my_dict['name']
-        df.rename(columns = {'name'      : 'param_full_name',
-                             'short_name': 'param_name'}, inplace = True)
-        df = df[['algorithm_name', 'param_name',
-                 'param_full_name',
-                 'type', 'value', 'address', 'n_bytes']]
-        df.sort_values(by = ['algorithm_name', 'param_name'], inplace = True)
-        df.index = range(len(df))
+            my_dict = json.loads(self.dumps())
+            df = pd.DataFrame(my_dict['parameters'])
 
-        return df
+            df['algorithm_name'] = my_dict['algorithm_name']
+            # df['algorithm_full_name'] = my_dict['name']
+            df.rename(columns = {'name'      : 'param_full_name',
+                                 'short_name': 'param_name'}, inplace = True)
+            df = df[['algorithm_name', 'param_name',
+                     'param_full_name',
+                     'type', 'value', 'address', 'n_bytes']]
+            df.sort_values(by = ['algorithm_name', 'param_name'], inplace = True)
+            df.index = range(len(df))
+
+            return df
+
+        except ImportError:
+            print('Need Pandas.')
 
 
     @staticmethod
@@ -320,6 +348,7 @@ class Module(_Element):
         self._parameters = tuple(parameter
                                  for algo in self._algorithms
                                  for parameter in algo._parameters)
+        self._ele = None
 
 
     @property
@@ -344,17 +373,22 @@ class Module(_Element):
 
     @property
     def df(self):
-        import pandas as pd
 
-        df = pd.concat([a.df for a in self._algorithms])
-        df['cell_name'] = self.name
-        df = df[['cell_name', 'algorithm_name', 'param_name',
-                 'param_full_name',
-                 'type', 'value', 'address', 'n_bytes']]
-        df.sort_values(by = ['cell_name', 'algorithm_name', 'param_name'], inplace = True)
-        df.index = range(len(df))
+        try:
+            import pandas as pd
 
-        return df
+            df = pd.concat([a.df for a in self._algorithms])
+            df['cell_name'] = self.name
+            df = df[['cell_name', 'algorithm_name', 'param_name',
+                     'param_full_name',
+                     'type', 'value', 'address', 'n_bytes']]
+            df.sort_values(by = ['cell_name', 'algorithm_name', 'param_name'], inplace = True)
+            df.index = range(len(df))
+
+            return df
+
+        except ImportError:
+            print('Need Pandas.')
 
 
 
@@ -368,6 +402,8 @@ class Register(_Element):
         self.address_increment = int(self._get_text('AddrIncr'))
         self._bytes = None
         self.bytes = self._bytearray_string_to_bytes(self._get_text('Data'))
+
+        self._ele = None
 
 
     @property
@@ -408,6 +444,7 @@ class IC(_Element):
         self._parameters = tuple(parameter
                                  for module in self._modules
                                  for parameter in module._parameters)
+        self._ele = None
 
 
     def __del__(self):
@@ -447,17 +484,22 @@ class IC(_Element):
 
     @property
     def df(self):
-        import pandas as pd
 
-        df = pd.concat([m.df for m in self._modules])
-        df.drop_duplicates(inplace = True)
-        df = df[['cell_name', 'algorithm_name', 'param_name',
-                 'param_full_name',
-                 'type', 'value', 'address', 'n_bytes']]
-        df['value'] = df.apply(lambda row: int(row['value']) if row['type'] == 'int' else row['value'], axis = 1)
-        # df.sort_values(by = ['cell_name', 'algorithm_name', 'param_name'], inplace = True)
-        # df.index = range(len(df))
-        df.set_index(['algorithm_name', 'cell_name', 'param_name'], inplace = True)
-        df.sort_index(inplace = True)
+        try:
+            import pandas as pd
 
-        return df
+            df = pd.concat([m.df for m in self._modules])
+            df.drop_duplicates(inplace = True)
+            df = df[['cell_name', 'algorithm_name', 'param_name',
+                     'param_full_name',
+                     'type', 'value', 'address', 'n_bytes']]
+            df['value'] = df.apply(lambda row: int(row['value']) if row['type'] == 'int' else row['value'], axis = 1)
+            # df.sort_values(by = ['cell_name', 'algorithm_name', 'param_name'], inplace = True)
+            # df.index = range(len(df))
+            df.set_index(['algorithm_name', 'cell_name', 'param_name'], inplace = True)
+            df.sort_index(inplace = True)
+
+            return df
+
+        except ImportError:
+            print('Need Pandas.')

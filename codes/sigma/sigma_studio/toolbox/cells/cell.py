@@ -55,7 +55,12 @@ class Cell:
 
     @property
     def df(self):
-        return self._module.df.set_index(['cell_name', 'algorithm_name', 'param_name'])
+
+        try:
+            return self._module.df.set_index(['cell_name', 'algorithm_name', 'param_name'])
+
+        except AttributeError as e:
+            print('Need Pandas.')
 
 
     def show_methods(self, print_out = True):

@@ -1,14 +1,5 @@
-import gc
 import os
 import sys
-
-
-
-def collect_garbage():
-    gc.collect()
-    if sys.platform == 'esp32':
-        print('[Memory - free: {}   allocated: {}]'.format(gc.mem_free(), gc.mem_alloc()))
-
 
 
 try:
@@ -43,6 +34,15 @@ except:
     import peripherals
     from adau import ADAU
     from ufactory import Factory
+    import gc
+
+
+
+    def collect_garbage():
+        gc.collect()
+        if sys.platform == 'esp32':
+            print('[Memory - free: {}   allocated: {}]'.format(gc.mem_free(), gc.mem_alloc()))
+
 
 
     with_hardware_device = True
@@ -88,14 +88,12 @@ factory = Factory(project_xml_file_url = project_xml_file_url,
 print('factory ready.')
 # print(factory.classes_dict)
 
-# cells = factory.get_cells()
-# cell = factory.get_cell_by_name('Volume_Control_out01')
-# cell.show_methods()
 
+# from test_adau_upy import factory, collect_garbage
+# collect_garbage()
 #
-# factory = Factory(project_xml_file_url = project_xml_file_url,
-#                   # class_files_root_url = class_files_root_url,
-#                   dsp = dsp
-#                   )
+# collect_garbage()
+# ic = factory.get_ic()
 #
-# print(factory._get_classes_dict())
+# collect_garbage()
+# cell = factory.get_cell_by_name('Tone1', ic)

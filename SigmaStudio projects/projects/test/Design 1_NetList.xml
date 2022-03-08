@@ -17,11 +17,58 @@
 <NetList>
     <IC name=" IC 1 " type="ADAU1401">
         <Schematic>
-            <Algorithm name="WhiteNAlgNew2" friendlyname="White Noise " cell="W Noise2 " location="{X=207, Y=119} " Growth="0 " GrowthB="0">
-                <Link pin="O_C13_A0_P1_out" dir="out" link="Link0" />
+            <Algorithm name="sin_lookupAlg19401" friendlyname="Tone Synthesis (lookup/sine) " cell="Tone1 " location="{X=79, Y=197.6821} " Growth="0 " GrowthB="0">
+                <Link pin="O_C638_A0_P1_out" dir="out" link="Link1" />
             </Algorithm>
-            <Algorithm name="ICSigma100Out1" friendlyname="170x\140x output " cell="Output1 " location="{X=336, Y=130} " Growth="0 " GrowthB="0">
-                <Link pin="I_C29_A0_P1_in" dir="in" link="Link0" />
+            <Algorithm name="sin_lookupAlg19402" friendlyname="Tone Synthesis (lookup/sine) " cell="Tone2 " location="{X=79, Y=264.9436} " Growth="0 " GrowthB="0">
+                <Link pin="O_C640_A0_P1_out" dir="out" link="Link0" />
+            </Algorithm>
+            <Algorithm name="ICSigma100In1" friendlyname="170x\140x input " cell="Input1 " location="{X=100, Y=413} " Growth="10 " GrowthB="0">
+                <Link pin="O_C642_A0_P1_out" dir="out" link="Link2" />
+                <Link pin="O_C642_A0_P2_out" dir="out" link="Link3" />
+            </Algorithm>
+            <Algorithm name="WhiteNAlgNew1" friendlyname="White Noise " cell="White_Noise " location="{X=118, Y=333.2616} " Growth="0 " GrowthB="0">
+                <Link pin="O_C655_A0_P1_out" dir="out" link="Link12" />
+            </Algorithm>
+            <Algorithm name="StMuxSwSlew1" friendlyname="Stereo SW Slew " cell="Source_Switch_0 " location="{X=322, Y=328.6872} " Growth="3 " GrowthB="0">
+                <Link pin="I_C660_A0_P3_in" dir="in" link="Link1" />
+                <Link pin="I_C660_A0_P4_in" dir="in" link="Link0" />
+                <Link pin="I_C660_A0_P5_in" dir="in" link="Link12" />
+                <Link pin="I_C660_A0_P6_in" dir="in" link="Link12" />
+                <Link pin="I_C660_A0_P7_in" dir="in" link="Link2" />
+                <Link pin="I_C660_A0_P8_in" dir="in" link="Link3" />
+                <Link pin="O_C660_A0_P1_out" dir="out" link="Link8" />
+                <Link pin="O_C660_A0_P2_out" dir="out" link="Link9" />
+            </Algorithm>
+            <Algorithm name="MuteNoSlewAlg13" friendlyname="No Slew (Standard) " cell="Mute_in0 " location="{X=401, Y=293.1667} " Growth="1 " GrowthB="0">
+                <Link pin="I_C813_A0_P1_in" dir="in" link="Link8" />
+                <Link pin="O_C813_A0_P2_out" dir="out" link="Link4" />
+            </Algorithm>
+            <Algorithm name="MuteNoSlewAlg14" friendlyname="No Slew (Standard) " cell="Mute_in1 " location="{X=401, Y=420.4974} " Growth="1 " GrowthB="0">
+                <Link pin="I_C816_A0_P1_in" dir="in" link="Link9" />
+                <Link pin="O_C816_A0_P2_out" dir="out" link="Link5" />
+            </Algorithm>
+            <Algorithm name="Gain1940AlgNS2" friendlyname="Gain (no slew) " cell="Gain_in0 " location="{X=479, Y=280.6667} " Growth="0 " GrowthB="0">
+                <Link pin="I_C678_A0_P1_in" dir="in" link="Link4" />
+                <Link pin="O_C678_A0_P2_out" dir="out" link="Link6" />
+            </Algorithm>
+            <Algorithm name="Gain1940AlgNS3" friendlyname="Gain (no slew) " cell="Gain_in1 " location="{X=479, Y=407.9974} " Growth="0 " GrowthB="0">
+                <Link pin="I_C702_A0_P1_in" dir="in" link="Link5" />
+                <Link pin="O_C702_A0_P2_out" dir="out" link="Link7" />
+            </Algorithm>
+            <Algorithm name="FIRFiltAlg1" friendlyname="FIR " cell="FIR0 " location="{X=575, Y=280.6667} " Growth="18 " GrowthB="0">
+                <Link pin="I_C669_A0_P1_in" dir="in" link="Link6" />
+                <Link pin="O_C669_A0_P2_out" dir="out" link="Link10" />
+            </Algorithm>
+            <Algorithm name="FIRFiltAlg2" friendlyname="FIR " cell="FIR1 " location="{X=575, Y=407.9974} " Growth="18 " GrowthB="0">
+                <Link pin="I_C719_A0_P1_in" dir="in" link="Link7" />
+                <Link pin="O_C719_A0_P2_out" dir="out" link="Link11" />
+            </Algorithm>
+            <Algorithm name="ICSigma100Out1" friendlyname="170x\140x output " cell="Output1 " location="{X=806, Y=326.7474} " Growth="0 " GrowthB="0">
+                <Link pin="I_C653_A0_P1_in" dir="in" link="Link10" />
+            </Algorithm>
+            <Algorithm name="ICSigma100Out2" friendlyname="170x\140x output " cell="Output1_2 " location="{X=806, Y=383.7474} " Growth="0 " GrowthB="0">
+                <Link pin="I_C717_A0_P1_in" dir="in" link="Link11" />
             </Algorithm>
         </Schematic>
     </IC>

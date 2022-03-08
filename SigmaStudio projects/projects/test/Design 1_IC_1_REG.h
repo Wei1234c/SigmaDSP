@@ -1,7 +1,7 @@
 /*
  * File:           C:\Users\Wei\Dropbox\Coding\notebooks\專案\待處理\SigmaDSP\bitbucket\github\SigmaStudio projects\projects\test\Design 1_IC_1_REG.h
  *
- * Created:        Monday, March 7, 2022 3:03:31 PM
+ * Created:        Tuesday, March 8, 2022 10:18:00 AM
  * Description:    Design 1:IC 1 control register definitions.
  *
  * This software is distributed in the hope that it will be useful,

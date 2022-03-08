@@ -2,11 +2,9 @@ import os
 
 
 try:
-    from ..sigma_studio.project.project_xml import get_ICs
     from . import ufactory
 
 except:
-    from project_xml import get_ICs
     import ufactory
 
 
