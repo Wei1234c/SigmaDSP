@@ -30,7 +30,7 @@ project_xml_file_url = os.sep.join(['..', '..', '..', 'SigmaStudio projects', 'p
 class_files_root_url = os.sep.join(['..', '..', 'sigma', 'sigma_studio', 'toolbox', 'cells'])
 
 factory = Factory(project_xml_file_url = project_xml_file_url,
-                  # class_files_root_url = class_files_root_url,
+                  class_files_root_url = class_files_root_url,
                   dsp = dsp
                   )
 
