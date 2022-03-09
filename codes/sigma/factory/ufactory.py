@@ -108,13 +108,21 @@ class Factory:
 
     # private functions ==================================
 
-    # Toolbox Cell ========================================
+    # Cell ========================================
     def _get_cell(self, xml_module):  # module: project_xml.Module
 
         class_name = xml_module.algorithm_name
-        py_module_name = self.classes_dict[class_name].replace('.py', '')
+        py_module_name = self._get_class_file_name(class_name)
 
         cls = getattr(__import__(f'{py_module_name}'), class_name)
         cell_object = cls(module = xml_module, dsp = self.dsp)
 
         return cell_object
+
+
+    def _get_class_file_name(self, class_name):
+        # for file_name, classes in self.classes_dict.items():
+        #     if class_name in classes:
+        #         return file_name
+
+        return self.classes_dict[class_name].replace('.py', '')

@@ -271,7 +271,7 @@ class Algorithm(_Element):
 
             try:
                 value = eval(value)
-            except (SyntaxError, NameError) as e:
+            except (SyntaxError, NameError):
                 pass
 
             return name, value

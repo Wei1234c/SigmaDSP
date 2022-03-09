@@ -108,8 +108,20 @@ class Factory(ufactory.Factory):
     @classmethod
     def _gen_classes_dict(cls):
         classes = cls._get_classes_list(cls.TEMP_PATH)
+        classes_dict = {class_name: file_name.replace('.py', '') for (class_name, file_name, _) in classes}
 
-        return {class_name: file_name.replace('.py', '') for (class_name, file_name, _) in classes}
+        # return cls._class_file_to_file_classes(classes_dict)
+        return classes_dict
+
+
+    @staticmethod
+    def _class_file_to_file_classes(classes_dict):
+        file_classes = {file_name: [] for file_name in set(classes_dict.values())}
+
+        for class_name, file_name in classes_dict.items():
+            file_classes[file_name].append(class_name)
+
+        return file_classes
 
 
     @classmethod

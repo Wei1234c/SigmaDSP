@@ -1,4 +1,4 @@
-class slice:
+class slice:  # for ESP32, which doesn't have "slice".
 
     def __init__(self, start, stop):
         self.start = start

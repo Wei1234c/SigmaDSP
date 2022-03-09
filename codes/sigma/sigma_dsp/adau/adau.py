@@ -127,7 +127,7 @@ class ADAU(dsp_processor.Device):
                 addr_stop = page_addr + self.N_BYTES_PER_PAGE
                 len_seg = addr_stop - addr_start
 
-                yield (bytes_array[:len_seg], addr_start)
+                yield bytes_array[:len_seg], addr_start
 
                 bytes_array = bytes_array[len_seg:]
                 page_idx += 1

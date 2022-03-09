@@ -6,7 +6,7 @@
 ### What is This ?
 - This is a Python package, with which you can:
     - Control SigmaDSP (ADAU1401/ADAU1701) from PC by:
-        - Reads the XML file of SigmaStudio project and generates proxy objects.
+        - Reading the XML file of SigmaStudio project and generates proxy objects.
         - Proxy objects represent SigmaStudio Toolbox algorithms in your project, and have functions like set_frequency, set_dB, set_coefficients... correspondingly.
         
         

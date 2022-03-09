@@ -59,7 +59,7 @@ class Cell:
         try:
             return self._module.df.set_index(['cell_name', 'algorithm_name', 'param_name'])
 
-        except AttributeError as e:
+        except AttributeError:
             print('Need Pandas.')
 
 
