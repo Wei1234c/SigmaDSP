@@ -62,48 +62,54 @@ except:
 
 dsp = ADAU(bus)
 
-
-
-class mo:
-    pass
-
-
-
-param = mo()
-param.address = 0
-param.bytes = bytes(4)
-param.type = float
-param.size = len(param.bytes)
-
-dsp.write_parameter(param)
-print(dsp.read_parameter(param))
-
-# ======================================
-# from test_adau_upy import dsp
-
 factory = Factory(project_xml_file_url = project_xml_file_url,
                   dsp = dsp
                   )
 
 print('factory ready.')
 
-
-# # ==============================
 #
-# from test_adau_upy import factory, collect_garbage
+# # for testing on ESP32 =============================
+# # dsp, factory ======================================
 #
+# from test_adau_upy import dsp, factory, collect_garbage
 #
 # collect_garbage()
+# # factory.classes_dict
+#
+# # ======================================
+#
+# class mo:
+#     pass
+#
+#
+#
+# param = mo()
+# param.address = 8
+#
+# param.type = int
+# param.bytes = bytes([0, 0, 0, 1])
+# param.size = len(param.bytes)
+# # dsp.write_parameter(param)
+# dsp.read_parameter(param)
+#
+# # IC and Parameter ==============================
 #
 # collect_garbage()
 # ic = factory.get_ic()
 #
-# p = ic._parameters[0]
+# module = ic._modules[0]
+# print('module.name:', module.name)
+#
+# p = module._parameters[0]
+# print('parameter.name:', p.name)
 # p.dumps()
 # p.value
-# p.set_value(2)
-# p.value
-# factory.dsp.write_parameter(p)
+# # p.set_value(2)
+# # p.value
+# # factory.dsp.write_parameter(p)
+# factory.dsp.read_parameter(p)
+# dsp.read_addressed_bytes(0, 4)
 #
 # # ==============================
 #
