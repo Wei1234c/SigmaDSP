@@ -51,19 +51,16 @@ class ADAU(dsp_processor.Device):
             address = self.ADDRESS_MIN if address is None else address
 
             return self._parent._read_addressed_bytes(i2c_address = self._i2c_address,
-                                                      reg_address = address,
+                                                      sub_address = address,
                                                       n_bytes = n_bytes)
 
 
-        def _write(self, bytes_array, address = None):
-            address = self.ADDRESS_MIN if address is None else address
-            return self._parent._write_addressed_bytes(i2c_address = self._i2c_address,
-                                                       reg_address = address,
-                                                       bytes_array = bytes_array)
-
-
         def write(self, bytes_array, address = None):
-            return self._write(bytes_array = bytes_array, address = address)
+            address = self.ADDRESS_MIN if address is None else address
+
+            return self._parent._write_addressed_bytes(i2c_address = self._i2c_address,
+                                                       sub_address = address,
+                                                       bytes_array = bytes_array)
 
 
         @property
@@ -111,12 +108,33 @@ class ADAU(dsp_processor.Device):
         ADDR_INCREMENT = N_BITS // 8
         N_BYTES = (ADDRESS_MAX - ADDRESS_MIN + 1) * ADDR_INCREMENT
         N_BYTES_PER_PAGE = 32
+        N_ADDRESS_BYTES = 2
+        CHUNK_READ_SIZE = 512
 
-        ADDRESS_INTERFACE_REGISTERS_MIN = 32
+        INTERFACE_REGISTERS_ADDRESS_MIN = 32
 
 
-        def _get_pages(self, bytes_array, address = None):
+        def _get_chunks(self, n_bytes, sub_address):
+            chunk_size = self.CHUNK_READ_SIZE
+            n_chunks = ceil(n_bytes / chunk_size)
+
+            for i in range(n_chunks):
+                addr = sub_address + i * chunk_size
+                nbytes = min(n_bytes - i * chunk_size, chunk_size)
+                yield addr, nbytes
+
+
+        def read(self, n_bytes, address = None):
             address = self.ADDRESS_MIN if address is None else address
+            ba = []
+
+            for addr, nbytes in self._get_chunks(n_bytes, address):
+                ba.append(super().read(n_bytes = nbytes, address = addr))
+
+            return b''.join(ba)
+
+
+        def _get_pages(self, bytes_array, address):
 
             page_idx = address // self.N_BYTES_PER_PAGE
             sub_addr_start = address % self.N_BYTES_PER_PAGE
@@ -135,8 +153,10 @@ class ADAU(dsp_processor.Device):
 
 
         def write(self, bytes_array, address = None):
-            for bytes_array, address in self._get_pages(bytes_array, address):
-                self._write(bytes_array = bytes_array, address = address)
+            address = self.ADDRESS_MIN if address is None else address
+
+            for data_bytes, addr in self._get_pages(bytes_array, address):
+                super().write(bytes_array = data_bytes, address = addr)
 
             return len(bytes_array)
 
@@ -326,31 +346,18 @@ class ADAU(dsp_processor.Device):
         self.control.reload_from_eeprom()
 
 
-    # hardware related IO========= ======================================
+    # hardware related IO ===============================================
 
-    def _read_addressed_bytes(self, i2c_address, reg_address, n_bytes):
-        if not self.is_virtual_device:
-            self._bus.writeto(i2c_address,
-                              reg_address.to_bytes(2, 'big'),
-                              False)
-            return self._bus.read_bytes(i2c_address = i2c_address, n_bytes = n_bytes)
-
-        return bytes(n_bytes)
+    def _read_addressed_bytes(self, i2c_address, sub_address, n_bytes):
+        return self._bus.read_addressed_bytes(i2c_address, sub_address, n_bytes)
 
 
-    def read_addressed_bytes(self, reg_address, n_bytes):
-        return self._read_addressed_bytes(self._i2c_address, reg_address, n_bytes)
+    def read_addressed_bytes(self, sub_address, n_bytes):
+        return self._read_addressed_bytes(self._i2c_address, sub_address, n_bytes)
 
 
-    def _write_addressed_bytes(self, i2c_address, reg_address, bytes_array):
-        n_bytes = len(bytes_array)
-
-        if not self.is_virtual_device:
-            ba = reg_address.to_bytes(2, 'big')
-            ba = b''.join([ba, bytes(bytes_array)])
-            self._bus.write_bytes(i2c_address = i2c_address, bytes_array = ba)
-
-        return n_bytes
+    def _write_addressed_bytes(self, i2c_address, sub_address, bytes_array):
+        return self._bus.write_addressed_bytes(i2c_address, sub_address, bytes_array)
 
 
     def write_addressed_bytes(self, address, bytes_array):

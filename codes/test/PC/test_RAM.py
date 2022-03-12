@@ -1,10 +1,10 @@
 from bridges.ftdi.adapters.micropython import machine
 from bridges.ftdi.controllers.i2c import I2cController
+from sigma.bus import adapters
 from sigma.sigma_dsp.adau.adau1401 import ADAU1401
-from utilities.adapters import peripherals
 
 
-with_hardware_device = False
+with_hardware_device = True
 
 if with_hardware_device:
 
@@ -19,7 +19,7 @@ if with_hardware_device:
 else:
     _i2c = _pin_reset = None  # using None for testing without actual hardware device.
 
-bus = peripherals.I2C(_i2c)
+bus = adapters.I2C(_i2c)
 dsp = ADAU1401(bus, pin_reset = _pin_reset)
 
 # =============================================

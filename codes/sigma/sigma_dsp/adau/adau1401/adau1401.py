@@ -41,7 +41,7 @@ class ADAU1701(ADAU):
         def generate_messages(self, segments_head, segments_tail):
             messages = [MessageWrite(subaddress = addr, data = data) for addr, data in segments_head]
             messages.extend([Message(message_type = 'No operation executed')] *
-                            (self.ADDRESS_INTERFACE_REGISTERS_MIN - sum(len(m.bytes) for m in messages) -
+                            (self.INTERFACE_REGISTERS_ADDRESS_MIN - sum(len(m.bytes) for m in messages) -
                              MessageWrite_SUBADDRESS_SLICE.stop))
             messages.extend([MessageWrite(subaddress = addr, data = data) for addr, data in segments_tail])
             messages.append(Message(message_type = 'End and wait for writeback'))
@@ -431,14 +431,14 @@ class ADAU1701(ADAU):
 
         def write_to_eeprom(self):
             self._parent.eeprom.write(bytes_array = self.bytes,
-                                      address = self._parent.eeprom.ADDRESS_INTERFACE_REGISTERS_MIN)
+                                      address = self._parent.eeprom.INTERFACE_REGISTERS_ADDRESS_MIN)
 
 
         def read_from_eeprom(self):
             assert self.control_port_write_mode, 'Control_port_write_mode not enabled.'
 
-            self.write(bytes_array = self._parent.eeprom.get_value(n_bytes = self.N_BYTES,
-                                                                   address = self._parent.eeprom.ADDRESS_INTERFACE_REGISTERS_MIN))
+            self.write(bytes_array = self._parent.eeprom.read(n_bytes = self.N_BYTES,
+                                                              address = self._parent.eeprom.INTERFACE_REGISTERS_ADDRESS_MIN))
             for i in range(self.N_REGISTERS):
                 self._parent._read_register(self[i])
 
@@ -706,7 +706,7 @@ class ADAU1701(ADAU):
 
     # register related ============================================
     def _read_register(self, register):
-        value = self._read_addressed_bytes(self._i2c_address, register.address, register.n_bytes)
+        value = self.read_addressed_bytes(register.address, register.n_bytes)
         register.load_value(int.from_bytes(value, byteorder = 'big'))
         self._show_bus_data(register.bytes, address = register.address, reading = True)
         self._print_register(register)

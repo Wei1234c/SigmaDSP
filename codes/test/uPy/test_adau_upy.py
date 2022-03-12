@@ -3,7 +3,7 @@ import sys
 
 
 try:
-    from utilities.adapters import peripherals
+    from sigma.bus import adapters
     from sigma.sigma_dsp.adau import ADAU
     from sigma.factory.ufactory import Factory
     from bridges.ftdi.controllers.i2c import I2cController
@@ -23,7 +23,7 @@ try:
     else:
         _i2c = pin_reset = None
 
-    bus = peripherals.I2C(_i2c)
+    bus = adapters.I2C(_i2c)
 
     project_xml_file_url = os.sep.join(['..', '..', '..', 'SigmaStudio projects', 'projects', 'demo', 'demo.xml'])
     class_files_root_url = os.sep.join(['..', '..', 'sigma', 'sigma_studio', 'toolbox', 'cells'])
@@ -53,7 +53,7 @@ except:
     else:
         _i2c = None  # using None for testing without actual hardware device.
 
-    bus = peripherals.I2C(_i2c)
+    bus = adapters.I2C(_i2c)
 
     project_xml_file_url = 'demo.xml'
     class_files_root_url = 'cells'

@@ -2,12 +2,12 @@ import os
 
 from bridges.ftdi.adapters.micropython import machine
 from bridges.ftdi.controllers.i2c import I2cController
+from sigma.bus import adapters
 from sigma.factory import Factory
 from sigma.sigma_dsp.adau.adau1401 import ADAU1401
-from utilities.adapters import peripherals
 
 
-with_hardware_device = False  # set True if hardware is connected.
+with_hardware_device = True  # set True if hardware is connected.
 
 if with_hardware_device:
     ctrl = I2cController()
@@ -21,7 +21,7 @@ if with_hardware_device:
 else:
     _i2c = _pin_reset = None  # using None for testing without actual hardware device.
 
-bus = peripherals.I2C(_i2c)
+bus = adapters.I2C(_i2c)
 dsp = ADAU1401(bus, pin_reset = _pin_reset)
 
 #  =================================
@@ -66,12 +66,16 @@ cell = factory.get_cell_by_name('Volume_Control_out01')
 #
 # # save_parameters_to_eeprom: save current parameters' value to EEPROM.
 #
-# tone1 = cells['Tone1']
-#
-# tone1.set_frequency(1200)
-# factory.save_parameters_to_eeprom()
-# dsp.reload_from_eeprom()
-#
-# tone1.set_frequency(110)
-# factory.save_parameters_to_eeprom()
-# dsp.reload_from_eeprom()
+
+dsp.eeprom.from_file('E2Prom.bin')
+dsp.reload_from_eeprom()
+
+tone1 = cells['Tone1']
+
+tone1.set_frequency(1200)
+factory.save_parameters_to_eeprom()
+dsp.reload_from_eeprom()
+
+tone1.set_frequency(110)
+factory.save_parameters_to_eeprom()
+dsp.reload_from_eeprom()

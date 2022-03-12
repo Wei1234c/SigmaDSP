@@ -1,5 +1,6 @@
 import json
 import os
+from array import array
 
 
 try:
@@ -170,7 +171,7 @@ class Parameter(_Element):
 
     def set_value(self, data):
 
-        if isinstance(data, bytes) or isinstance(data, bytearray):  # data is bytes
+        if isinstance(data, (bytes, bytearray, array)):
             if self.type is bytes:
                 assert len(data) == self.size, 'Must be same size.'
                 self._bytes = data
@@ -215,10 +216,11 @@ class Parameter(_Element):
 
         data_bytes = self.bytes
         numbers = []
+        n = self._cls_numeric.N_BYTES
 
-        for i in range(int(self.size / self._cls_numeric.N_BYTES)):
-            numbers.append(self._cls_numeric.bytes_to_value(data_bytes[:self._cls_numeric.N_BYTES]))
-            data_bytes = data_bytes[self._cls_numeric.N_BYTES:]
+        for i in range(int(self.size / n)):
+            numbers.append(self._cls_numeric.bytes_to_value(data_bytes[:n]))
+            data_bytes = data_bytes[n:]
 
         return numbers
 

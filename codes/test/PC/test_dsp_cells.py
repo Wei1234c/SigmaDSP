@@ -1,9 +1,9 @@
 from bridges.ftdi.adapters.micropython import machine
 from bridges.ftdi.controllers.i2c import I2cController
+from sigma.bus import adapters
 from sigma.sigma_dsp.adau.adau1401 import ADAU1401
 from sigma.sigma_studio.project.project_xml import get_ICs
 from sigma.sigma_studio.toolbox.cells.sources.oscillators import *
-from utilities.adapters import peripherals
 
 
 with_hardware_device = True
@@ -20,11 +20,12 @@ if with_hardware_device:
 else:
     _i2c = _pin_reset = None  # using None for testing without actual hardware device.
 
-bus = peripherals.I2C(_i2c)
+bus = adapters.I2C(_i2c)
 dsp = ADAU1401(bus, pin_reset = _pin_reset)
 
 #  =================================
 import os
+
 
 project_xml_file_url = os.sep.join(['..', '..', '..', 'SigmaStudio projects', 'projects', 'demo', 'demo.xml'])
 ic = get_ICs(project_xml_file_url)[0]
@@ -36,8 +37,6 @@ print(cell.name)
 print(cell.PARAMETER_SHORT_NAMES)
 
 cell.enable(False)
-
-
 
 print()
 # print(cell.get_coefficients())
