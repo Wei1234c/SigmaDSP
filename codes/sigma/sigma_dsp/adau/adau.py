@@ -42,67 +42,83 @@ class ADAU(dsp_processor.Device):
         ADDR_INCREMENT = None
         N_BYTES = None
 
-        CHUNK_SIZE_READ = 0x0200
-        CHUNK_SIZE_WRITE = 0x020
-
-
 
         def __init__(self, parent, i2c_address = None):
             super().__init__(parent)
             self._i2c_address = i2c_address or self._parent._i2c_address
 
 
-        def read(self, n_bytes, address = None):
-            address = self.ADDRESS_MIN if address is None else address
-            ba = []
+        # # ==============================================================
+        # CHUNK_SIZE_READ = 0x0200
+        # CHUNK_SIZE_WRITE = 0x020
+        #
+        # def read(self, n_bytes, address = None):
+        #     address = self.ADDRESS_MIN if address is None else address
+        #     ba = []
+        #
+        #     for addr, nbytes in self._chunks_to_read(n_bytes, address):
+        #         ba.append(self._read(n_bytes = nbytes, address = addr))
+        #
+        #     return b''.join(ba)
+        #
+        #
+        # def write(self, bytes_array, address = None):
+        #     address = self.ADDRESS_MIN if address is None else address
+        #
+        #     for addr, data_bytes in self._chunks_to_write(bytes_array, address):
+        #         self._write(bytes_array = data_bytes, address = addr)
+        #
+        #
+        # def _chunks_to_read(self, n_bytes, address):
+        #     chunk_size = self.CHUNK_SIZE_READ
+        #     assert chunk_size % self.ADDR_INCREMENT == 0
+        #
+        #     n_chunks = ceil(n_bytes / chunk_size)
+        #
+        #     for i in range(n_chunks):
+        #         addr = address + (i * chunk_size // self.ADDR_INCREMENT)
+        #         nbytes = min(n_bytes - i * chunk_size, chunk_size)
+        #         yield addr, nbytes
+        #
+        #
+        # def _chunks_to_write(self, bytes_array, address):
+        #     chunk_size = self.CHUNK_SIZE_WRITE
+        #     assert chunk_size % self.ADDR_INCREMENT == 0
+        #
+        #     n_chunks = ceil(len(bytes_array) / chunk_size)
+        #
+        #     for i in range(n_chunks):
+        #         addr = address + (i * chunk_size // self.ADDR_INCREMENT)
+        #         yield addr, bytes_array[:chunk_size]
+        #         bytes_array = bytes_array[chunk_size:]
+        #
+        #
+        # def _read(self, n_bytes, address):
+        #     return self._parent._read_addressed_bytes(i2c_address = self._i2c_address,
+        #                                               sub_address = address,
+        #                                               n_bytes = n_bytes)
+        #
+        #
+        # def _write(self, bytes_array, address):
+        #     return self._parent._write_addressed_bytes(i2c_address = self._i2c_address,
+        #                                                sub_address = address,
+        #                                                bytes_array = bytes_array)
+        #
+        # # ==============================================================
 
-            for addr, nbytes in self._chunks_to_read(n_bytes, address):
-                ba.append(self._read(n_bytes = nbytes, address = addr))
-
-            return b''.join(ba)
-
-
-        def write(self, bytes_array, address = None):
-            address = self.ADDRESS_MIN if address is None else address
-
-            for addr, data_bytes in self._chunks_to_write(bytes_array, address):
-                self._write(bytes_array = data_bytes, address = addr)
-
-
-        def _read(self, n_bytes, address):
+        def read(self, n_bytes, address):
             return self._parent._read_addressed_bytes(i2c_address = self._i2c_address,
                                                       sub_address = address,
                                                       n_bytes = n_bytes)
 
 
-        def _write(self, bytes_array, address):
+        def write(self, bytes_array, address):
             return self._parent._write_addressed_bytes(i2c_address = self._i2c_address,
                                                        sub_address = address,
                                                        bytes_array = bytes_array)
 
-        def _chunks_to_read(self, n_bytes, address):
-            chunk_size = self.CHUNK_SIZE_READ
-            assert chunk_size % self.ADDR_INCREMENT == 0
 
-            n_chunks = ceil(n_bytes / chunk_size)
-
-            for i in range(n_chunks):
-                addr = address + (i * chunk_size // self.ADDR_INCREMENT)
-                nbytes = min(n_bytes - i * chunk_size, chunk_size)
-                yield addr, nbytes
-
-
-        def _chunks_to_write(self, bytes_array, address):
-            chunk_size = self.CHUNK_SIZE_WRITE
-            assert chunk_size % self.ADDR_INCREMENT == 0
-
-            n_chunks = ceil(len(bytes_array) / chunk_size)
-
-            for i in range(n_chunks):
-                addr = address + (i * chunk_size // self.ADDR_INCREMENT)
-                yield addr, bytes_array[:chunk_size]
-                bytes_array = bytes_array[chunk_size:]
-
+        # ==============================================================
 
         @property
         def bytes(self):
