@@ -139,13 +139,17 @@ cells = factory.get_cells(ic)
 #
 tone1 = cells['Tone1']
 
-dsp.eeprom.from_file('E2Prom.bin')
+# dsp.eeprom.from_file('E2Prom.bin')
 # dsp.reload_from_eeprom()
-
-tone1.set_frequency(1200)
-factory.save_parameters_to_eeprom()
-dsp.reload_from_eeprom()
-
-tone1.set_frequency(440)
-factory.save_parameters_to_eeprom()
-dsp.reload_from_eeprom()
+#
+# dsp.program_ram.bytes
+# dsp.parameter_ram.bytes
+#
+#
+# tone1.set_frequency(1200)
+# factory.save_parameters_to_eeprom()
+# dsp.reload_from_eeprom()
+#
+# tone1.set_frequency(440)
+# factory.save_parameters_to_eeprom()
+# dsp.reload_from_eeprom()

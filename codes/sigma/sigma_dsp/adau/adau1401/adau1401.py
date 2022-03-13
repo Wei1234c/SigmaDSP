@@ -38,6 +38,14 @@ class ADAU1701(ADAU):
                     return message
 
 
+        @property
+        def program_message(self):
+            for message in self.messages:
+                if message.message_type == 'Write' and \
+                        message.subaddress == self._parent.program_ram.ADDRESS_MIN:
+                    return message
+
+
         def generate_messages(self, segments_head, segments_tail):
             messages = [MessageWrite(subaddress = addr, data = data) for addr, data in segments_head]
             messages.extend([Message(message_type = 'No operation executed')] *
@@ -192,6 +200,12 @@ class ADAU1701(ADAU):
                                                 data_bytes = data_bytes)
 
 
+        def reload_from_eeprom(self):
+            # todo: need to reload registers.
+            self._parent.parameter_ram.write(self._parent.eeprom.params_message.bytes)
+            self._parent.program_ram.write(self._parent.eeprom.program_message.bytes)
+
+
         # text file operations ===================
 
         def load_SigmaStudio_files(self, file_NumBytes, file_TxBuffer):
@@ -202,7 +216,7 @@ class ADAU1701(ADAU):
         # XML operations ===================
 
         def write_xml_register(self, register):  # register: project_xml.Register
-            self._parent.write_addressed_bytes(register.address, register.bytes)
+            self._parent.write_addressed_bytes(sub_address = register.address, bytes_array = register.bytes)
 
 
         def write_xml_ic(self, ic):  # ic: project_xml.IC
@@ -532,7 +546,8 @@ class ADAU1701(ADAU):
 
         def read_reg(self, register_idx = 0):
             reg = self._parent.map.registers[f'Data Capture {register_idx}']
-            return self._parent.DspNumber.from_bytes(self._parent.read_addressed_bytes(reg.address, self.N_BYTES),
+            return self._parent.DspNumber.from_bytes(self._parent.read_addressed_bytes(sub_address = reg.address,
+                                                                                       n_bytes = self.N_BYTES),
                                                      n_bits_A = self.NUMERIC_FORMAT[0],
                                                      n_bits_B = self.NUMERIC_FORMAT[1])
 
@@ -706,7 +721,7 @@ class ADAU1701(ADAU):
 
     # register related ============================================
     def _read_register(self, register):
-        value = self.read_addressed_bytes(register.address, register.n_bytes)
+        value = self.read_addressed_bytes(sub_address = register.address, n_bytes = register.n_bytes)
         register.load_value(int.from_bytes(value, byteorder = 'big'))
         self._show_bus_data(register.bytes, address = register.address, reading = True)
         self._print_register(register)
@@ -716,7 +731,7 @@ class ADAU1701(ADAU):
     def _write_register(self, register, reset = False):
         if register.address not in self.READ_ONLY_REGISTERS:
             super()._write_register(register, reset = reset)
-            return self.write_addressed_bytes(register.address, register.bytes)
+            return self.write_addressed_bytes(sub_address = register.address, bytes_array = register.bytes)
 
 
     # by element's name ===========================================
