@@ -1,7 +1,7 @@
 /*
  * File:           C:\Users\Wei\Dropbox\Coding\notebooks\專案\待處理\SigmaDSP\bitbucket\github\SigmaStudio projects\projects\test\Design 1_IC_1_PARAM.h
  *
- * Created:        Tuesday, March 8, 2022 10:18:00 AM
+ * Created:        Monday, March 14, 2022 1:06:12 PM
  * Description:    Design 1:IC 1 parameter RAM definitions.
  *
  * This software is distributed in the hope that it will be useful,
@@ -20,37 +20,37 @@
 #define __DESIGN_1_IC_1_PARAM_H__
 
 
+/* Module Tone0 - Sine Tone*/
+#define MOD_TONE0_COUNT                                3
+#define MOD_TONE0_DEVICE                               "IC1"
+#define MOD_STATIC_TONE0_ALG0_MASK_ADDR                0
+#define MOD_STATIC_TONE0_ALG0_MASK_FIXPT               0x000000FF
+#define MOD_STATIC_TONE0_ALG0_MASK_VALUE               SIGMASTUDIOTYPE_INTEGER_CONVERT(255)
+#define MOD_STATIC_TONE0_ALG0_MASK_TYPE                SIGMASTUDIOTYPE_INTEGER
+#define MOD_TONE0_ALG0_INCREMENT_ADDR                  1
+#define MOD_TONE0_ALG0_INCREMENT_FIXPT                 0x0000962F
+#define MOD_TONE0_ALG0_INCREMENT_VALUE                 SIGMASTUDIOTYPE_FIXPOINT_CONVERT(0.00458333333333333)
+#define MOD_TONE0_ALG0_INCREMENT_TYPE                  SIGMASTUDIOTYPE_FIXPOINT
+#define MOD_TONE0_ALG0_ON_ADDR                         2
+#define MOD_TONE0_ALG0_ON_FIXPT                        0x00800000
+#define MOD_TONE0_ALG0_ON_VALUE                        SIGMASTUDIOTYPE_FIXPOINT_CONVERT(1)
+#define MOD_TONE0_ALG0_ON_TYPE                         SIGMASTUDIOTYPE_FIXPOINT
+
 /* Module Tone1 - Sine Tone*/
 #define MOD_TONE1_COUNT                                3
 #define MOD_TONE1_DEVICE                               "IC1"
-#define MOD_STATIC_TONE1_ALG0_MASK_ADDR                0
+#define MOD_STATIC_TONE1_ALG0_MASK_ADDR                3
 #define MOD_STATIC_TONE1_ALG0_MASK_FIXPT               0x000000FF
 #define MOD_STATIC_TONE1_ALG0_MASK_VALUE               SIGMASTUDIOTYPE_INTEGER_CONVERT(255)
 #define MOD_STATIC_TONE1_ALG0_MASK_TYPE                SIGMASTUDIOTYPE_INTEGER
-#define MOD_TONE1_ALG0_INCREMENT_ADDR                  1
-#define MOD_TONE1_ALG0_INCREMENT_FIXPT                 0x0000962F
-#define MOD_TONE1_ALG0_INCREMENT_VALUE                 SIGMASTUDIOTYPE_FIXPOINT_CONVERT(0.00458333333333333)
+#define MOD_TONE1_ALG0_INCREMENT_ADDR                  4
+#define MOD_TONE1_ALG0_INCREMENT_FIXPT                 0x00009BA5
+#define MOD_TONE1_ALG0_INCREMENT_VALUE                 SIGMASTUDIOTYPE_FIXPOINT_CONVERT(0.00475)
 #define MOD_TONE1_ALG0_INCREMENT_TYPE                  SIGMASTUDIOTYPE_FIXPOINT
-#define MOD_TONE1_ALG0_ON_ADDR                         2
+#define MOD_TONE1_ALG0_ON_ADDR                         5
 #define MOD_TONE1_ALG0_ON_FIXPT                        0x00800000
 #define MOD_TONE1_ALG0_ON_VALUE                        SIGMASTUDIOTYPE_FIXPOINT_CONVERT(1)
 #define MOD_TONE1_ALG0_ON_TYPE                         SIGMASTUDIOTYPE_FIXPOINT
-
-/* Module Tone2 - Sine Tone*/
-#define MOD_TONE2_COUNT                                3
-#define MOD_TONE2_DEVICE                               "IC1"
-#define MOD_STATIC_TONE2_ALG0_MASK_ADDR                3
-#define MOD_STATIC_TONE2_ALG0_MASK_FIXPT               0x000000FF
-#define MOD_STATIC_TONE2_ALG0_MASK_VALUE               SIGMASTUDIOTYPE_INTEGER_CONVERT(255)
-#define MOD_STATIC_TONE2_ALG0_MASK_TYPE                SIGMASTUDIOTYPE_INTEGER
-#define MOD_TONE2_ALG0_INCREMENT_ADDR                  4
-#define MOD_TONE2_ALG0_INCREMENT_FIXPT                 0x00009BA5
-#define MOD_TONE2_ALG0_INCREMENT_VALUE                 SIGMASTUDIOTYPE_FIXPOINT_CONVERT(0.00475)
-#define MOD_TONE2_ALG0_INCREMENT_TYPE                  SIGMASTUDIOTYPE_FIXPOINT
-#define MOD_TONE2_ALG0_ON_ADDR                         5
-#define MOD_TONE2_ALG0_ON_FIXPT                        0x00800000
-#define MOD_TONE2_ALG0_ON_VALUE                        SIGMASTUDIOTYPE_FIXPOINT_CONVERT(1)
-#define MOD_TONE2_ALG0_ON_TYPE                         SIGMASTUDIOTYPE_FIXPOINT
 
 /* Module White_Noise - White Noise*/
 #define MOD_WHITE_NOISE_COUNT                          3
@@ -68,45 +68,45 @@
 #define MOD_WHITE_NOISE_ALG0_SEED_VALUE                SIGMASTUDIOTYPE_INTEGER_CONVERT(345675)
 #define MOD_WHITE_NOISE_ALG0_SEED_TYPE                 SIGMASTUDIOTYPE_INTEGER
 
-/* Module Source_Switch_0 - Stereo Switch Nx2*/
-#define MOD_SOURCE_SWITCH_0_COUNT                      1
-#define MOD_SOURCE_SWITCH_0_DEVICE                     "IC1"
-#define MOD_SOURCE_SWITCH_0_STEREOSWSLEW_ADDR          8
-#define MOD_SOURCE_SWITCH_0_STEREOSWSLEW_FIXPT         0x00000000
-#define MOD_SOURCE_SWITCH_0_STEREOSWSLEW_VALUE         SIGMASTUDIOTYPE_INTEGER_CONVERT(0)
-#define MOD_SOURCE_SWITCH_0_STEREOSWSLEW_TYPE          SIGMASTUDIOTYPE_INTEGER
+/* Module Source_Switch - Stereo Switch Nx2*/
+#define MOD_SOURCE_SWITCH_COUNT                        1
+#define MOD_SOURCE_SWITCH_DEVICE                       "IC1"
+#define MOD_SOURCE_SWITCH_STEREOSWSLEW_ADDR            8
+#define MOD_SOURCE_SWITCH_STEREOSWSLEW_FIXPT           0x00000000
+#define MOD_SOURCE_SWITCH_STEREOSWSLEW_VALUE           SIGMASTUDIOTYPE_INTEGER_CONVERT(0)
+#define MOD_SOURCE_SWITCH_STEREOSWSLEW_TYPE            SIGMASTUDIOTYPE_INTEGER
 
-/* Module Mute_in0 - Mute*/
-#define MOD_MUTE_IN0_COUNT                             1
-#define MOD_MUTE_IN0_DEVICE                            "IC1"
-#define MOD_MUTE_IN0_MUTENOSLEWALG13MUTE_ADDR          9
-#define MOD_MUTE_IN0_MUTENOSLEWALG13MUTE_FIXPT         0x00800000
-#define MOD_MUTE_IN0_MUTENOSLEWALG13MUTE_VALUE         SIGMASTUDIOTYPE_FIXPOINT_CONVERT(1)
-#define MOD_MUTE_IN0_MUTENOSLEWALG13MUTE_TYPE          SIGMASTUDIOTYPE_FIXPOINT
+/* Module Mute_0 - Mute*/
+#define MOD_MUTE_0_COUNT                               1
+#define MOD_MUTE_0_DEVICE                              "IC1"
+#define MOD_MUTE_0_MUTENOSLEWALG13MUTE_ADDR            9
+#define MOD_MUTE_0_MUTENOSLEWALG13MUTE_FIXPT           0x00800000
+#define MOD_MUTE_0_MUTENOSLEWALG13MUTE_VALUE           SIGMASTUDIOTYPE_FIXPOINT_CONVERT(1)
+#define MOD_MUTE_0_MUTENOSLEWALG13MUTE_TYPE            SIGMASTUDIOTYPE_FIXPOINT
 
-/* Module Mute_in1 - Mute*/
-#define MOD_MUTE_IN1_COUNT                             1
-#define MOD_MUTE_IN1_DEVICE                            "IC1"
-#define MOD_MUTE_IN1_MUTENOSLEWALG14MUTE_ADDR          10
-#define MOD_MUTE_IN1_MUTENOSLEWALG14MUTE_FIXPT         0x00800000
-#define MOD_MUTE_IN1_MUTENOSLEWALG14MUTE_VALUE         SIGMASTUDIOTYPE_FIXPOINT_CONVERT(1)
-#define MOD_MUTE_IN1_MUTENOSLEWALG14MUTE_TYPE          SIGMASTUDIOTYPE_FIXPOINT
+/* Module Mute_1 - Mute*/
+#define MOD_MUTE_1_COUNT                               1
+#define MOD_MUTE_1_DEVICE                              "IC1"
+#define MOD_MUTE_1_MUTENOSLEWALG14MUTE_ADDR            10
+#define MOD_MUTE_1_MUTENOSLEWALG14MUTE_FIXPT           0x00800000
+#define MOD_MUTE_1_MUTENOSLEWALG14MUTE_VALUE           SIGMASTUDIOTYPE_FIXPOINT_CONVERT(1)
+#define MOD_MUTE_1_MUTENOSLEWALG14MUTE_TYPE            SIGMASTUDIOTYPE_FIXPOINT
 
-/* Module Gain_in0 - Gain*/
-#define MOD_GAIN_IN0_COUNT                             1
-#define MOD_GAIN_IN0_DEVICE                            "IC1"
-#define MOD_GAIN_IN0_GAIN1940ALGNS2_ADDR               11
-#define MOD_GAIN_IN0_GAIN1940ALGNS2_FIXPT              0x00800000
-#define MOD_GAIN_IN0_GAIN1940ALGNS2_VALUE              SIGMASTUDIOTYPE_FIXPOINT_CONVERT(1)
-#define MOD_GAIN_IN0_GAIN1940ALGNS2_TYPE               SIGMASTUDIOTYPE_FIXPOINT
+/* Module Gain_0 - Gain*/
+#define MOD_GAIN_0_COUNT                               1
+#define MOD_GAIN_0_DEVICE                              "IC1"
+#define MOD_GAIN_0_GAIN1940ALGNS2_ADDR                 11
+#define MOD_GAIN_0_GAIN1940ALGNS2_FIXPT                0x00800000
+#define MOD_GAIN_0_GAIN1940ALGNS2_VALUE                SIGMASTUDIOTYPE_FIXPOINT_CONVERT(1)
+#define MOD_GAIN_0_GAIN1940ALGNS2_TYPE                 SIGMASTUDIOTYPE_FIXPOINT
 
-/* Module Gain_in1 - Gain*/
-#define MOD_GAIN_IN1_COUNT                             1
-#define MOD_GAIN_IN1_DEVICE                            "IC1"
-#define MOD_GAIN_IN1_GAIN1940ALGNS3_ADDR               12
-#define MOD_GAIN_IN1_GAIN1940ALGNS3_FIXPT              0x00800000
-#define MOD_GAIN_IN1_GAIN1940ALGNS3_VALUE              SIGMASTUDIOTYPE_FIXPOINT_CONVERT(1)
-#define MOD_GAIN_IN1_GAIN1940ALGNS3_TYPE               SIGMASTUDIOTYPE_FIXPOINT
+/* Module Gain_1 - Gain*/
+#define MOD_GAIN_1_COUNT                               1
+#define MOD_GAIN_1_DEVICE                              "IC1"
+#define MOD_GAIN_1_GAIN1940ALGNS3_ADDR                 12
+#define MOD_GAIN_1_GAIN1940ALGNS3_FIXPT                0x00800000
+#define MOD_GAIN_1_GAIN1940ALGNS3_VALUE                SIGMASTUDIOTYPE_FIXPOINT_CONVERT(1)
+#define MOD_GAIN_1_GAIN1940ALGNS3_TYPE                 SIGMASTUDIOTYPE_FIXPOINT
 
 /* Module FIR0 - FIR Filter*/
 #define MOD_FIR0_COUNT                                 10

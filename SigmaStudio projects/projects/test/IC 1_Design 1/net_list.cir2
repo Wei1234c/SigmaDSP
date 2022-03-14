@@ -1,14 +1,2 @@
-0 sin_lookupAlg19401 O_C638_A0_P1_out Link1
-1 sin_lookupAlg19402 O_C640_A0_P1_out Link0
-2 ICSigma100In1 O_C642_A0_P1_out Link2 O_C642_A0_P2_out Link3
-3 WhiteNAlgNew1 O_C655_A0_P1_out Link12
-4 StMuxSwSlew1 I_C660_A0_P3_in Link1 I_C660_A0_P4_in Link0 I_C660_A0_P5_in Link12 I_C660_A0_P6_in Link12 I_C660_A0_P7_in Link2 I_C660_A0_P8_in Link3 O_C660_A0_P1_out Link8 O_C660_A0_P2_out Link9
-5 ReadBackAlg1 I_C0_A0_P1_in Link12
-6 MuteNoSlewAlg13 I_C813_A0_P1_in Link8 O_C813_A0_P2_out Link4
-7 MuteNoSlewAlg14 I_C816_A0_P1_in Link9 O_C816_A0_P2_out Link5
-8 Gain1940AlgNS2 I_C678_A0_P1_in Link4 O_C678_A0_P2_out Link6
-9 Gain1940AlgNS3 I_C702_A0_P1_in Link5 O_C702_A0_P2_out Link7
-10 FIRFiltAlg1 I_C669_A0_P1_in Link6 O_C669_A0_P2_out Link10
-11 FIRFiltAlg2 I_C719_A0_P1_in Link7 O_C719_A0_P2_out Link11
-12 ICSigma100Out1 I_C653_A0_P1_in Link10
-13 ICSigma100Out2 I_C717_A0_P1_in Link11
+0 sin_lookupAlg19401 O_C0_A0_P1_out Link0
+1 ReadBackAlg1 I_C2_A0_P1_in Link0

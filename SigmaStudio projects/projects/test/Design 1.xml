@@ -54,7 +54,7 @@
             <Data>0x00, 0x1C, </Data>
         </Register>
         <Module>
-            <CellName>Tone1</CellName>
+            <CellName>Tone0</CellName>
             <Algorithm>
                 <AlgoName>ALG0</AlgoName>
                 <DetailedName>sin_lookupAlg19401</DetailedName>
@@ -86,7 +86,7 @@
             </Algorithm>
         </Module>
         <Module>
-            <CellName>Tone2</CellName>
+            <CellName>Tone1</CellName>
             <Algorithm>
                 <AlgoName>ALG0</AlgoName>
                 <DetailedName>sin_lookupAlg19402</DetailedName>
@@ -150,7 +150,7 @@
             </Algorithm>
         </Module>
         <Module>
-            <CellName>Source_Switch_0</CellName>
+            <CellName>Source_Switch</CellName>
             <Algorithm>
                 <AlgoName>ALG0</AlgoName>
                 <DetailedName>StMuxSwSlew1</DetailedName>
@@ -181,7 +181,7 @@
             </Algorithm>
         </Module>
         <Module>
-            <CellName>Gain_in0</CellName>
+            <CellName>Gain_0</CellName>
             <Algorithm>
                 <AlgoName>ALG0</AlgoName>
                 <DetailedName>Gain1940AlgNS2</DetailedName>
@@ -197,7 +197,7 @@
             </Algorithm>
         </Module>
         <Module>
-            <CellName>Gain_in1</CellName>
+            <CellName>Gain_1</CellName>
             <Algorithm>
                 <AlgoName>ALG0</AlgoName>
                 <DetailedName>Gain1940AlgNS3</DetailedName>
@@ -228,7 +228,7 @@
             </Algorithm>
         </Module>
         <Module>
-            <CellName>Mute_in0</CellName>
+            <CellName>Mute_0</CellName>
             <Algorithm>
                 <AlgoName>ALG0</AlgoName>
                 <DetailedName>MuteNoSlewAlg13</DetailedName>
@@ -244,7 +244,7 @@
             </Algorithm>
         </Module>
         <Module>
-            <CellName>Mute_in1</CellName>
+            <CellName>Mute_1</CellName>
             <Algorithm>
                 <AlgoName>ALG0</AlgoName>
                 <DetailedName>MuteNoSlewAlg14</DetailedName>
@@ -259,5 +259,8 @@
                 </ModuleParameter>
             </Algorithm>
         </Module>
+    </IC>
+    <IC>
+        <Name>IC 2</Name>
     </IC>
 </Schematic>
