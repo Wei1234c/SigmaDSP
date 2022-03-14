@@ -48,72 +48,23 @@ class ADAU(dsp_processor.Device):
             self._i2c_address = i2c_address or self._parent._i2c_address
 
 
-        # chunks ==============================================================
-
-        CHUNK_SIZE_READ = 500
-        CHUNK_SIZE_WRITE = 60
-
-
-        def _chunks_to_read(self, n_bytes, address, n_bytes_per_address = 1):
-            chunk_size = self.CHUNK_SIZE_READ
-            n_chunks = ceil(n_bytes / chunk_size)
-            assert chunk_size % n_bytes_per_address == 0
-
-            for i in range(n_chunks):
-                addr = address + (i * chunk_size // n_bytes_per_address)
-                nbytes = min(n_bytes - i * chunk_size, chunk_size)
-                yield addr, nbytes
-
-
-        def _chunks_to_write(self, bytes_array, address, n_bytes_per_address = 1):
-            chunk_size = self.CHUNK_SIZE_WRITE
-            n_chunks = ceil(len(bytes_array) / chunk_size)
-            assert chunk_size % n_bytes_per_address == 0
-
-            for i in range(n_chunks):
-                addr = address + (i * chunk_size // n_bytes_per_address)
-                yield addr, bytes_array[:chunk_size]
-                bytes_array = bytes_array[chunk_size:]
-
+        # read / write ============================================
 
         def read(self, n_bytes, address = None):
             address = self.ADDRESS_MIN if address is None else address
-            ba = []
 
-            for addr, nbytes in self._chunks_to_read(n_bytes, address, self.ADDR_INCREMENT):
-                ba.append(self._parent._bus.read_addressed_bytes(i2c_address = self._i2c_address,
-                                                                 sub_address = addr,
-                                                                 n_bytes = nbytes))
-            return b''.join(ba)
+            return self._parent._bus.read_addressed_bytes(i2c_address = self._i2c_address,
+                                                          sub_address = address,
+                                                          n_bytes = n_bytes)
 
 
         def write(self, bytes_array, address = None):
             address = self.ADDRESS_MIN if address is None else address
 
-            for addr, data_bytes in self._chunks_to_write(bytes_array, address, self.ADDR_INCREMENT):
-                self._parent._bus.write_addressed_bytes(i2c_address = self._i2c_address,
-                                                        sub_address = addr,
-                                                        bytes_array = data_bytes)
+            return self._parent._bus.write_addressed_bytes(i2c_address = self._i2c_address,
+                                                           sub_address = address,
+                                                           bytes_array = bytes_array)
 
-
-        # chunks ==============================================================
-
-        # read / write ============================================
-        #
-        # def read(self, n_bytes, address = None):
-        #     address = self.ADDRESS_MIN if address is None else address
-        #
-        #     return self._parent._bus.read_addressed_bytes(i2c_address = self._i2c_address,
-        #                                                   sub_address = address,
-        #                                                   n_bytes = n_bytes)
-        #
-        #
-        # def write(self, bytes_array, address = None):
-        #     address = self.ADDRESS_MIN if address is None else address
-        #
-        #     return self._parent._bus.write_addressed_bytes(i2c_address = self._i2c_address,
-        #                                                    sub_address = address,
-        #                                                    bytes_array = bytes_array)
 
         # ==============================================================
 
@@ -166,19 +117,17 @@ class ADAU(dsp_processor.Device):
 
         INTERFACE_REGISTERS_ADDRESS_MIN = 32
 
-        CHUNK_SIZE_READ = N_BYTES_PER_PAGE * 16
-        CHUNK_SIZE_WRITE = N_BYTES_PER_PAGE
 
+        @classmethod
+        def _get_pages(cls, bytes_array, address):
 
-        def _get_pages(self, bytes_array, address):
-
-            page_idx = address // self.N_BYTES_PER_PAGE
-            sub_addr_start = address % self.N_BYTES_PER_PAGE
+            page_idx = address // cls.N_BYTES_PER_PAGE
+            sub_addr_start = address % cls.N_BYTES_PER_PAGE
 
             while len(bytes_array) > 0:
-                page_addr = page_idx * self.N_BYTES_PER_PAGE
+                page_addr = page_idx * cls.N_BYTES_PER_PAGE
                 addr_start = page_addr + sub_addr_start
-                addr_stop = page_addr + self.N_BYTES_PER_PAGE
+                addr_stop = page_addr + cls.N_BYTES_PER_PAGE
                 len_seg = addr_stop - addr_start
 
                 yield bytes_array[:len_seg], addr_start
@@ -316,8 +265,9 @@ class ADAU(dsp_processor.Device):
 
 
         # Messages operations ===================
-        @classmethod
-        def messages_from_bytes(cls, message_bytes):
+
+        @staticmethod
+        def messages_from_bytes(message_bytes):
             return Message.messages_from_bytes(message_bytes)
 
 

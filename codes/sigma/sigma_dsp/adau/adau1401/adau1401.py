@@ -17,7 +17,62 @@ except:
 
 
 class ADAU1701(ADAU):
-    class _EEPROM(ADAU._EEPROM):
+    class _RAM(ADAU._RAM):
+
+        # chunks ==============================================================
+        # for USBi as USB-I2C converter. USBi hangs when handling long chunk (> 512K bytes) of data.
+
+        CHUNK_SIZE_READ = 500
+        CHUNK_SIZE_WRITE = 60
+
+
+        @classmethod
+        def _chunks_to_read(cls, n_bytes, address, n_bytes_per_address = 1):
+            chunk_size = cls.CHUNK_SIZE_READ
+            n_chunks = ceil(n_bytes / chunk_size)
+            assert chunk_size % n_bytes_per_address == 0
+
+            for i in range(n_chunks):
+                addr = address + (i * chunk_size // n_bytes_per_address)
+                nbytes = min(n_bytes - i * chunk_size, chunk_size)
+                yield addr, nbytes
+
+
+        @classmethod
+        def _chunks_to_write(cls, bytes_array, address, n_bytes_per_address = 1):
+            chunk_size = cls.CHUNK_SIZE_WRITE
+            n_chunks = ceil(len(bytes_array) / chunk_size)
+            assert chunk_size % n_bytes_per_address == 0
+
+            for i in range(n_chunks):
+                addr = address + (i * chunk_size // n_bytes_per_address)
+                yield addr, bytes_array[:chunk_size]
+                bytes_array = bytes_array[chunk_size:]
+
+
+        def read(self, n_bytes, address = None):
+            address = self.ADDRESS_MIN if address is None else address
+            ba = []
+
+            for addr, nbytes in self._chunks_to_read(n_bytes, address, self.ADDR_INCREMENT):
+                ba.append(self._parent._bus.read_addressed_bytes(i2c_address = self._i2c_address,
+                                                                 sub_address = addr,
+                                                                 n_bytes = nbytes))
+            return b''.join(ba)
+
+
+        def write(self, bytes_array, address = None):
+            address = self.ADDRESS_MIN if address is None else address
+
+            for addr, data_bytes in self._chunks_to_write(bytes_array, address, self.ADDR_INCREMENT):
+                self._parent._bus.write_addressed_bytes(i2c_address = self._i2c_address,
+                                                        sub_address = addr,
+                                                        bytes_array = data_bytes)
+
+        # chunks ==============================================================
+
+
+    class _EEPROM(ADAU._EEPROM, _RAM):
 
         # message ==========================================
         @property
@@ -30,48 +85,50 @@ class ADAU1701(ADAU):
             raise NotImplementedError
 
 
+        @staticmethod
+        def _find_message_write(messages, subaddress):
+            for message in messages:
+                if message.message_type == 'Write' and \
+                        message.subaddress == subaddress:
+                    return message
+
+
         @property
         def params_message(self):
-            for message in self.messages:
-                if message.message_type == 'Write' and \
-                        message.subaddress == self._parent.parameter_ram.ADDRESS_MIN:
-                    return message
+            return self._find_message_write(self.messages, self._parent.parameter_ram.ADDRESS_MIN)
 
 
         @property
         def program_message(self):
-            for message in self.messages:
-                if message.message_type == 'Write' and \
-                        message.subaddress == self._parent.program_ram.ADDRESS_MIN:
-                    return message
+            return self._find_message_write(self.messages, self._parent.program_ram.ADDRESS_MIN)
 
 
-        def generate_messages(self, segments_head, segments_tail):
+        def save_as_message(self, address, data_bytes):
+            messages = self.messages
+            message = self._find_message_write(messages, address)
+
+            if message is not None:
+                assert len(data_bytes) == len(message.data)
+
+                message.data = data_bytes
+                self.write(messages.bytes)
+                return
+
+            messages.append(MessageWrite(subaddress = address, data = data_bytes))
+            self.write(messages.bytes)
+
+
+        @classmethod
+        def generate_messages(cls, segments_head, segments_tail):
             messages = [MessageWrite(subaddress = addr, data = data) for addr, data in segments_head]
             messages.extend([Message(message_type = 'No operation executed')] *
-                            (self.INTERFACE_REGISTERS_ADDRESS_MIN - sum(len(m.bytes) for m in messages) -
+                            (cls.INTERFACE_REGISTERS_ADDRESS_MIN - sum(len(m.bytes) for m in messages) -
                              MessageWrite_SUBADDRESS_SLICE.stop))
             messages.extend([MessageWrite(subaddress = addr, data = data) for addr, data in segments_tail])
             messages.append(Message(message_type = 'End and wait for writeback'))
             messages.append(Message(message_type = 'End'))
 
             return messages
-
-
-        def save_as_message(self, address, data_bytes):
-            messages = self.messages
-
-            for message in messages:
-                if message.message_type == 'Write' and \
-                        message.subaddress == address:
-                    assert len(data_bytes) == len(message.data)
-
-                    message.data = data_bytes
-                    self.write(messages.bytes)
-                    return
-
-            messages.append(MessageWrite(subaddress = address, data = data_bytes))
-            self.write(messages.bytes)
 
 
         # serialization =====================================
@@ -87,7 +144,7 @@ class ADAU1701(ADAU):
                 self._parent._pin_write_protect.value(0 if value else 1)
 
 
-    class _ParameterRAM(ADAU._ParameterRAM):
+    class _ParameterRAM(ADAU._ParameterRAM, _RAM):
 
         def safe_loads(self, param_address, data_bytes):
             assert self.safeload_done, 'Previous safeload is still on going.'
@@ -201,9 +258,14 @@ class ADAU1701(ADAU):
 
 
         def reload_from_eeprom(self):
-            # todo: need to reload registers.
-            self._parent.parameter_ram.write(self._parent.eeprom.params_message.bytes)
-            self._parent.program_ram.write(self._parent.eeprom.program_message.bytes)
+            for message in self._parent.eeprom.messages:
+                if message.message_type == 'Write' and \
+                        message.subaddress not in (self._parent.parameter_ram.ADDRESS_MIN,
+                                                   self._parent.program_ram.ADDRESS_MIN):
+                    self.write_message(message)
+
+            self._parent.parameter_ram.write(self._parent.eeprom.params_message.data)
+            self._parent.program_ram.write(self._parent.eeprom.program_message.data)
 
 
         # text file operations ===================
@@ -245,20 +307,24 @@ class ADAU1701(ADAU):
             return self._parent._read_element_by_name('AAPD').value == 1
 
 
-        def adc_input_resistor_total(self, input_voltage_rms = 2, sampling_frequency = SAMPLING_FREQ_DEFAULT):
-            return input_voltage_rms * self.ADC_INPUT_RESISTOR_TOTAL_DEFAULT * SAMPLING_FREQ_DEFAULT // sampling_frequency
+        @classmethod
+        def adc_input_resistor_total(cls, input_voltage_rms = 2, sampling_frequency = SAMPLING_FREQ_DEFAULT):
+            return input_voltage_rms * cls.ADC_INPUT_RESISTOR_TOTAL_DEFAULT * SAMPLING_FREQ_DEFAULT // sampling_frequency
 
 
-        def adc_input_resistor_external(self, input_voltage_rms = 2, sampling_frequency = SAMPLING_FREQ_DEFAULT):
-            return self.adc_input_resistor_total(input_voltage_rms, sampling_frequency) - self.ADC_INTERNAL_RESISTOR
+        @classmethod
+        def adc_input_resistor_external(cls, input_voltage_rms = 2, sampling_frequency = SAMPLING_FREQ_DEFAULT):
+            return cls.adc_input_resistor_total(input_voltage_rms, sampling_frequency) - cls.ADC_INTERNAL_RESISTOR
 
 
-        def adc_reference_resistor_total(self, sampling_frequency = SAMPLING_FREQ_DEFAULT):
-            return self.ADC_INPUT_RESISTOR_TOTAL_DEFAULT * SAMPLING_FREQ_DEFAULT // sampling_frequency
+        @classmethod
+        def adc_reference_resistor_total(cls, sampling_frequency = SAMPLING_FREQ_DEFAULT):
+            return cls.ADC_INPUT_RESISTOR_TOTAL_DEFAULT * SAMPLING_FREQ_DEFAULT // sampling_frequency
 
 
-        def adc_reference_resistor_external(self, sampling_frequency = SAMPLING_FREQ_DEFAULT):
-            return self.adc_reference_resistor_total(sampling_frequency) - self.ADC_INTERNAL_RESISTOR
+        @classmethod
+        def adc_reference_resistor_external(cls, sampling_frequency = SAMPLING_FREQ_DEFAULT):
+            return cls.adc_reference_resistor_total(sampling_frequency) - cls.ADC_INTERNAL_RESISTOR
 
 
     class _DAC(ADAU._Base):
@@ -418,7 +484,7 @@ class ADAU1701(ADAU):
             self._parent.gpio.enable_serial_output(value)
 
 
-    class _InterfaceRegisters(ADAU._RAM):
+    class _InterfaceRegisters(_RAM):
 
         ADDRESS_MIN = 0x0800
         ADDRESS_MAX = 0x0807
@@ -491,7 +557,7 @@ class ADAU1701(ADAU):
         REGISTER_NAME_PREFIX = 'Auxiliary ADC Data'
 
 
-    class _ProgramRAM(ADAU._RAM):
+    class _ProgramRAM(_RAM):
         NAME = 'Program Data'
         ADDRESS_MIN = 0x0400
         ADDRESS_MAX = 0x07FF

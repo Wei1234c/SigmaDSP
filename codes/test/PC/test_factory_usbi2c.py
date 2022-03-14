@@ -56,18 +56,19 @@ for m in messages:
 # # ===================================
 # n = 32 * 2
 # addr = 0
-
-# ba = dsp.parameter_ram.bytes
-# print(len(ba))
-
+#
 
 # ba = dsp.eeprom.bytes
 # print(len(ba))
-
-# ba = dsp.program_ram.read(4096)
+#
+# ba = dsp.parameter_ram.bytes
+# print(len(ba))
+#
+# ba = dsp.program_ram.bytes
 # print(len(ba))
 
-
+#
+#
 # ba_original = dsp.parameter_ram.read(n, addr)
 # print('ba_original:', [(i) for i in ba_original])
 #
@@ -145,11 +146,10 @@ tone1 = cells['Tone1']
 # dsp.program_ram.bytes
 # dsp.parameter_ram.bytes
 #
-#
 # tone1.set_frequency(1200)
 # factory.save_parameters_to_eeprom()
 # dsp.reload_from_eeprom()
-#
+# #
 # tone1.set_frequency(440)
 # factory.save_parameters_to_eeprom()
 # dsp.reload_from_eeprom()
