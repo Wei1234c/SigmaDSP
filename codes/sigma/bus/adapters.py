@@ -4,6 +4,7 @@ import sys
 
 try:
     machine_name = os.uname().machine
+
 except Exception:
     machine_name = os.name
 
@@ -44,7 +45,6 @@ class Bus:
 
 
 class I2C(Bus):  # transform MicroPython, FTDI I2C objects into unified interface.
-
     N_SUB_ADDRESS_BYTES = 2
 
 

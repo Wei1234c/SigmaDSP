@@ -108,18 +108,18 @@ Parameter Data :
 Cell Name         = Gain_0
 Parameter Name    = Gain1940AlgNS2
 Parameter Address = 11
-Parameter Value   = 1
+Parameter Value   = 0.299999952316284
 Parameter Data :
-0x00, 0x80, 0x00, 0x00, 
+0x00, 0x26, 0x66, 0x66, 
 
 
 
 Cell Name         = Gain_1
 Parameter Name    = Gain1940AlgNS3
 Parameter Address = 12
-Parameter Value   = 1
+Parameter Value   = 0.299999952316284
 Parameter Data :
-0x00, 0x80, 0x00, 0x00, 
+0x00, 0x26, 0x66, 0x66, 
 
 
 
@@ -171,8 +171,8 @@ See also Design 1.hex file
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
 0x00 , 	0x80 , 	0x00 , 	0x00 , 	
 0x00 , 	0x80 , 	0x00 , 	0x00 , 	
-0x00 , 	0x80 , 	0x00 , 	0x00 , 	
-0x00 , 	0x80 , 	0x00 , 	0x00 , 	
+0x00 , 	0x26 , 	0x66 , 	0x66 , 	
+0x00 , 	0x26 , 	0x66 , 	0x66 , 	
 0x00 , 	0x80 , 	0x00 , 	0x00 , 	
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
@@ -1197,8 +1197,8 @@ Parameter data for: IC 1 (Binary format starting at parameter address 0)
 00000000	00000000	00000000	00000000	
 00000000	10000000	00000000	00000000	
 00000000	10000000	00000000	00000000	
-00000000	10000000	00000000	00000000	
-00000000	10000000	00000000	00000000	
+00000000	00100110	01100110	01100110	
+00000000	00100110	01100110	01100110	
 00000000	10000000	00000000	00000000	
 00000000	00000000	00000000	00000000	
 00000000	00000000	00000000	00000000	

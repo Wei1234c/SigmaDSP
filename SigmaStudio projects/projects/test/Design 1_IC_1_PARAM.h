@@ -1,7 +1,7 @@
 /*
  * File:           C:\Users\Wei\Dropbox\Coding\notebooks\專案\待處理\SigmaDSP\bitbucket\github\SigmaStudio projects\projects\test\Design 1_IC_1_PARAM.h
  *
- * Created:        Monday, March 14, 2022 1:06:12 PM
+ * Created:        Monday, March 14, 2022 3:41:40 PM
  * Description:    Design 1:IC 1 parameter RAM definitions.
  *
  * This software is distributed in the hope that it will be useful,
@@ -96,16 +96,16 @@
 #define MOD_GAIN_0_COUNT                               1
 #define MOD_GAIN_0_DEVICE                              "IC1"
 #define MOD_GAIN_0_GAIN1940ALGNS2_ADDR                 11
-#define MOD_GAIN_0_GAIN1940ALGNS2_FIXPT                0x00800000
-#define MOD_GAIN_0_GAIN1940ALGNS2_VALUE                SIGMASTUDIOTYPE_FIXPOINT_CONVERT(1)
+#define MOD_GAIN_0_GAIN1940ALGNS2_FIXPT                0x00266666
+#define MOD_GAIN_0_GAIN1940ALGNS2_VALUE                SIGMASTUDIOTYPE_FIXPOINT_CONVERT(0.3)
 #define MOD_GAIN_0_GAIN1940ALGNS2_TYPE                 SIGMASTUDIOTYPE_FIXPOINT
 
 /* Module Gain_1 - Gain*/
 #define MOD_GAIN_1_COUNT                               1
 #define MOD_GAIN_1_DEVICE                              "IC1"
 #define MOD_GAIN_1_GAIN1940ALGNS3_ADDR                 12
-#define MOD_GAIN_1_GAIN1940ALGNS3_FIXPT                0x00800000
-#define MOD_GAIN_1_GAIN1940ALGNS3_VALUE                SIGMASTUDIOTYPE_FIXPOINT_CONVERT(1)
+#define MOD_GAIN_1_GAIN1940ALGNS3_FIXPT                0x00266666
+#define MOD_GAIN_1_GAIN1940ALGNS3_VALUE                SIGMASTUDIOTYPE_FIXPOINT_CONVERT(0.3)
 #define MOD_GAIN_1_GAIN1940ALGNS3_TYPE                 SIGMASTUDIOTYPE_FIXPOINT
 
 /* Module FIR0 - FIR Filter*/

@@ -1,0 +1,8 @@
+0 sin_lookupAlg19401 O_C31_A0_P1_out Link8
+1 sin_lookupAlg19402 O_C33_A0_P1_out Link6
+2 ICSigma100In1 O_C35_A0_P1_out Link7 O_C35_A0_P2_out Link4
+3 WhiteNAlgNew2 O_C46_A0_P1_out Link5
+4 StMuxSwSlew1 I_C51_A0_P3_in Link8 I_C51_A0_P4_in Link6 I_C51_A0_P5_in Link5 I_C51_A0_P6_in Link5 I_C51_A0_P7_in Link7 I_C51_A0_P8_in Link4 O_C51_A0_P1_out Link2 O_C51_A0_P2_out Link3
+5 SWGain1940DBAlg1 I_C136_A0_P1_in Link2 I_C136_A0_P3_in Link3 O_C136_A0_P2_out Link0 O_C136_A0_P4_out Link1
+6 ICSigma100Out1 I_C128_A0_P1_in Link0
+7 ICSigma100Out2 I_C130_A0_P1_in Link1
