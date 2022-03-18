@@ -1,72 +1,69 @@
-### SigmaDSP Toolbox Proxy
-
-[![SigmaDSP PC Control Test](https://raw.githubusercontent.com/Wei1234c/SigmaDSP/master/jpgs/demo_equip_setup.png)](https://youtu.be/XHlZtDsa4oE)     
-
-
-### What is This ?
+# SigmaStudio TCPIP Channel Tools Box
+![](https://raw.githubusercontent.com/Wei1234c/TCPi/master/jpgs/Sigma%20TCPi%20server.png)
+## What is this?
 - This is a Python package, with which you can:
-    - Control SigmaDSP (ADAU1401/ADAU1701) from PC by:
-        - Reading the XML file of SigmaStudio project and generates proxy objects.
-        - Proxy objects represent SigmaStudio Toolbox algorithms in your project, and have functions like set_frequency, set_dB, set_coefficients... correspondingly.
-        
-        
-### Why This ?
-- ADAU1401/ADAU1701 are precious for DSP tasks, but I would like to tune filter coefficients automatically, therefore need to control DSP functions on the fly.
-- SigmaStudio supports scripting from Python, see [SigmaStudio Scripting from Python](https://wiki.analog.com/resources/tools-software/sigmastudio/usingsigmastudio/scripting/python). However, I would prefer that the same package can be used on Windows / Linux, PC / RPi / ESP32 without modification. 
+    - Remotely control SigmaDSP through TCP/IP channel.
+        - With SigmaStudio or Python program.
+    - Use ESP32 / PC as a client.
+    - Use ESP32 / PC as the server. 
+    - Can also **read data from** SigmaDSP over TCP/IP channel.
+    - Can read/write **EEPROM**.
+    
+
+## Why?
+- I was [playing with SigmaDSP (ADAU1701/ADAU1401)](https://github.com/Wei1234c/SigmaDSP), and often need to switch between USBi and [FTDI FT232H](https://www.google.com/search?q=ftdi+ft232h&sxsrf=APq-WBvh8jByLE89c5v9AHCrUAZXqxOAmA:1646325613903&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjCrZrrsKr2AhVL05QKHeoaD4gQ_AUoAXoECAEQAw&biw=1396&bih=585&dpr=1.38).
+- With SigmaDSP TCP/IP channel, SigmaStudio and Python program can share the same channel to access SigmaDSP, no more switching.
+- Remote access is always a huge advantage.
+
+## Design and Features
+- Coverage of SigmaDSP's memory space:
+    - Can access data of program RAM, parameter RAM, and also **EEPROM**, just assign the address to read/write.
+- Can also read data from SigmaDSP
+    - Not only writing data to, but can also **read data from** SigmaDSP via TCP/IP channel.
+- A client can be:
+    - A PC running SigmaStudio
+    - A PC running Python program
+    - An ESP32 running MicroPython
+- A server can be:
+    - A PC with Python enviornment
+        - Using USB-I2C converter (like FTDI FT232H) to access SigmaDSP.
+        - [Using USBi as an USB-I2C converter](https://github.com/Wei1234c/USBi) to access SigmaDSP.        
+    - An ESP32 with MicroPython enviornment 
+        - Using its I2C port to access SigmaDSP.  
 
 
-### Design and Features  
-- PC control: Can control DSP hardware's behavior from PC, so resources (like Python, AI) are available for filter tuning.
-- Coverage of SigmaStudio Toolbox: one-to-one class mapping for each SigmaStudio Toolbox algorithm (most of them are not tested yet though).
-- Easy to use: only the XML file of SigmaStudio project is required. "Factory" will render every thing you need.
-- Serialization: 
-    - Load from:  
-        - files: 
-            - Binary (bytearray) file
-            - SigmStudio text files (e.g. NumBytes_IC_1.dat, TxBuffer_IC_1.dat)
-            - SigmaStudio project.xml
-        - EEPROM
-    - Save to:   
-        - files: 
-            - Binary (bytearray) file
-            - Text file (converted from binary file)
-        - EEPROM  
-        
-		
-### Supported Chips
+## How to use it
+- For using ESP32 as the server:
+    - Download [TCPi_uPy.rar](https://github.com/Wei1234c/TCPi/raw/master/notebooks/tools/TCPi_uPy.rar).
+    - Unzip it and edit the following items in file `config.py`:
+        - LED, on your ESP32 module:
+            - ON_BOARD_LED_PIN_NO, ON_BOARD_LED_HIGH_IS_ON
+        - I2C connection:
+            - I2C_SCL_PIN_ID, I2C_SDA_PIN_ID: with which pins the ESP32 should use to connect with ADAU1701.
+            - Avoid some pins of ESP32, see [ESP32 GPIO guide](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/).
+        - WiFi:
+            - SSID, PASSWORD 
+    - Upload all file to ESP32.
+    - In ESP32's terminal interface, type `import test_tcpi_upy`, it will show it's IP when WiFi connection is established.
+        - The default port number is 8086.
+        - You can write `import test_tcpi_upy` into file `main.py`, so it will run as a Sigma TCP/IP channel server after each boot.
+    - Follow [AD's instruction](https://wiki.analog.com/resources/tools-software/sigmastudio/usingsigmastudio/tcpipchannels_) to connect to the server.
+- Please also see [here](https://github.com/Wei1234c/TCPi/tree/master/notebooks/Functional%20test) and [here](https://github.com/Wei1234c/TCPi/tree/master/codes/test/pc) for examples.  
+
+
+## Test Results
+- [Control SigmaDSP with SigmaStudio through TCP/IP Channel, using ESP32 as the server](https://youtu.be/fecBbvJBepI) 
+- [Control SigmaDSP with Python program through TCP/IP Channel, using ESP32 as the server](https://youtu.be/0D95nNcjJ2Q)
+    
+## Supported Chips
 - ADAU1701
 - ADAU1702
 - ADAU1401
 - ADAU1401A
 
+## Limitations
+- Not high speed, obvious latency. 
+- Need more memory to accommdate the data SigmaStudio uploads all at once. ESP32 with 8MB PSRAM is preferred.
 
-### Documents  
-
-- [Object Hierarchy](https://wei1234c.blogspot.com/2022/03/sigmadsp-agents-object-hierarchy.html)  
- 
-- [ADAU1401 Functional Test](https://github.com/Wei1234c/SigmaDSP/blob/master/notebooks/Functional%20test/ADAU1401%20Functional%20Test.ipynb)  
-
-- [ADAU1401.Control Functional Test](https://github.com/Wei1234c/SigmaDSP/blob/master/notebooks/Functional%20test/ADAU1401.Control%20Functional%20Test.ipynb)  
-
-- [ADAU1401 RAM / EEPROM Functional Test](https://github.com/Wei1234c/SigmaDSP/blob/master/notebooks/Functional%20test/ADAU1401%20RAM%20EEPROM%20Functional%20Test.ipynb)  
-
-- [Message Functional Test](https://github.com/Wei1234c/SigmaDSP/blob/master/notebooks/Functional%20test/Message%20Functional%20Test.ipynb)  
-
-- [XML Related Classes Functional Test](https://github.com/Wei1234c/SigmaDSP/blob/master/notebooks/Functional%20test/XML%20Related%20Classes%20Functional%20Test.ipynb)  
-
-- [Factory Functional Test](https://github.com/Wei1234c/SigmaDSP/blob/master/notebooks/Functional%20test/Factory%20Functional%20Test.ipynb)  
-
-- [Cell Functional Test](https://github.com/Wei1234c/SigmaDSP/blob/master/notebooks/Functional%20test/Cell%20Functional%20Test.ipynb)  
-
-- [Functional Demostration](https://github.com/Wei1234c/SigmaDSP/blob/master/notebooks/Functional%20test/Functional%20Demostration.ipynb) 
-
-
-### Dependencies
-
-- [Signal_Generators](https://github.com/Wei1234c/Signal_Generators)  
-
-- [Bridges](https://github.com/Wei1234c/Bridges)  
-
+## Dependencies
 - [Utilities](https://github.com/Wei1234c/Utilities)
-
-- [FTDI FT232H](https://www.google.com/search?q=ftdi+ft232h&sxsrf=APq-WBvh8jByLE89c5v9AHCrUAZXqxOAmA:1646325613903&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjCrZrrsKr2AhVL05QKHeoaD4gQ_AUoAXoECAEQAw&biw=1396&bih=585&dpr=1.38)  
