@@ -12,7 +12,7 @@
         
 ### Why This ?
 - ADAU1401/ADAU1701 are precious for DSP tasks, but I would like to tune filter coefficients automatically, therefore need to control DSP functions on the fly.
-- SigmaStudio supports scripting from Python, see [SigmaStudio Scripting from Python](https://wiki.analog.com/resources/tools-software/sigmastudio/usingsigmastudio/scripting/python). However, I would prefer that the same package can be used on Windows / Linux, PC / RPi / ESP32 without modification. 
+- SigmaStudio supports scripting from Python, see [SigmaStudio Scripting from Python](https://wiki.analog.com/resources/tools-software/sigmastudio/usingsigmastudio/scripting/python). However, I prefer that the same package can be used on Windows / Linux, PC / RPi / ESP32 without modification. 
 
 
 ### Design and Features  
