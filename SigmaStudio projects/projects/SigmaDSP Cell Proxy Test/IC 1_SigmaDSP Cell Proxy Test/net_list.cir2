@@ -1,0 +1,70 @@
+0 sin_lookupAlg19401 O_C0_A0_P1_out Link57
+1 sin_lookupAlg19402 O_C2_A0_P1_out Link58
+2 ICSigma100In1 O_C4_A0_P1_out Link59 O_C4_A0_P2_out Link60
+3 WhiteNAlgNew1 O_C31_A0_P1_out Link56
+4 StMuxSwSlew1 I_C36_A0_P3_in Link57 I_C36_A0_P4_in Link58 I_C36_A0_P5_in Link56 I_C36_A0_P6_in Link56 I_C36_A0_P7_in Link59 I_C36_A0_P8_in Link60 O_C36_A0_P1_out Link4 O_C36_A0_P2_out Link8
+5 StMuxSwSlew2 I_C208_A0_P3_in Link57 I_C208_A0_P4_in Link58 I_C208_A0_P5_in Link56 I_C208_A0_P6_in Link56 I_C208_A0_P7_in Link59 I_C208_A0_P8_in Link60 O_C208_A0_P1_out Link45 O_C208_A0_P2_out Link46
+6 SWGain1940DBAlg1 I_C631_A0_P1_in Link4 I_C631_A0_P3_in Link8 O_C631_A0_P2_out Link67 O_C631_A0_P4_out Link68
+7 SWGain1940DBAlg4 I_C253_A0_P1_in Link45 I_C253_A0_P3_in Link46 O_C253_A0_P2_out Link69 O_C253_A0_P4_out Link72
+8 MuteNoSlewAlg13 I_C590_A0_P1_in Link67 O_C590_A0_P2_out Link36
+9 MuteNoSlewAlg14 I_C595_A0_P1_in Link68 O_C595_A0_P2_out Link37
+10 MuteNoSlewAlg15 I_C235_A0_P1_in Link69 O_C235_A0_P2_out Link43
+11 MuteNoSlewAlg16 I_C238_A0_P1_in Link72 O_C238_A0_P2_out Link47
+12 PEQ1Chan1 I_C166_A0_P1_in Link36 O_C166_A0_P2_out Link3
+13 PEQ1Chan3 I_C104_A0_P1_in Link37 O_C104_A0_P2_out Link7
+14 PEQ1Chan7 I_C220_A0_P1_in Link43 O_C220_A0_P2_out Link44
+15 PEQ1Chan8 I_C226_A0_P1_in Link47 O_C226_A0_P2_out Link42
+16 Gain1940AlgNS3 I_C50_A0_P1_in Link3 O_C50_A0_P2_out Link61
+17 Gain1940AlgNS2 I_C99_A0_P1_in Link7 O_C99_A0_P2_out Link63
+18 Gain1940AlgNS8 I_C223_A0_P1_in Link42 O_C223_A0_P2_out Link70
+19 Gain1940AlgNS7 I_C217_A0_P1_in Link44 O_C217_A0_P2_out Link71
+20 MuteNoSlewAlg1 I_C80_A0_P1_in Link61 O_C80_A0_P2_out Link9
+21 MuteNoSlewAlg2 I_C93_A0_P1_in Link63 O_C93_A0_P2_out Link10
+22 MuteNoSlewAlg4 I_C450_A0_P1_in Link61 O_C450_A0_P2_out Link17
+23 MuteNoSlewAlg7 I_C498_A0_P1_in Link61 O_C498_A0_P2_out Link25
+24 MuteNoSlewAlg10 I_C546_A0_P1_in Link61 O_C546_A0_P2_out Link30
+25 MuteNoSlewAlg6 I_C466_A0_P1_in Link63 O_C466_A0_P2_out Link12
+26 MuteNoSlewAlg9 I_C514_A0_P1_in Link63 O_C514_A0_P2_out Link24
+27 MuteNoSlewAlg12 I_C562_A0_P1_in Link63 O_C562_A0_P2_out Link34
+28 MuteNoSlewAlg17 I_C306_A0_P1_in Link71 O_C306_A0_P2_out Link48
+29 MuteNoSlewAlg18 I_C309_A0_P1_in Link70 O_C309_A0_P2_out Link49
+30 MuteNoSlewAlg19 I_C318_A0_P1_in Link71 O_C318_A0_P2_out Link50
+31 MuteNoSlewAlg20 I_C321_A0_P1_in Link70 O_C321_A0_P2_out Link51
+32 MuteNoSlewAlg21 I_C324_A0_P1_in Link71 O_C324_A0_P2_out Link52
+33 MuteNoSlewAlg22 I_C327_A0_P1_in Link70 O_C327_A0_P2_out Link53
+34 MuteNoSlewAlg23 I_C330_A0_P1_in Link71 O_C330_A0_P2_out Link54
+35 MuteNoSlewAlg24 I_C333_A0_P1_in Link70 O_C333_A0_P2_out Link55
+36 SingleCtrlMixer19401 I_C19_A0_P2_in Link9 I_C19_A0_P3_in Link10 I_C19_A0_P4_in Link48 I_C19_A0_P5_in Link49 O_C19_A0_P1_out Link2
+37 SingleCtrlMixer19402 I_C456_A0_P2_in Link17 I_C456_A0_P3_in Link12 I_C456_A0_P4_in Link50 I_C456_A0_P5_in Link51 O_C456_A0_P1_out Link15
+38 SingleCtrlMixer19403 I_C504_A0_P2_in Link25 I_C504_A0_P3_in Link24 I_C504_A0_P4_in Link52 I_C504_A0_P5_in Link53 O_C504_A0_P1_out Link20
+39 SingleCtrlMixer19404 I_C552_A0_P2_in Link30 I_C552_A0_P3_in Link34 I_C552_A0_P4_in Link54 I_C552_A0_P5_in Link55 O_C552_A0_P1_out Link35
+40 PEQ1Chan2 I_C77_A0_P1_in Link2 O_C77_A0_P2_out Link6
+41 PEQ1Chan4 I_C463_A0_P1_in Link15 O_C463_A0_P2_out Link18
+42 PEQ1Chan5 I_C511_A0_P1_in Link20 O_C511_A0_P2_out Link21
+43 PEQ1Chan6 I_C559_A0_P1_in Link35 O_C559_A0_P2_out Link33
+44 FIRFiltAlg1 I_C64_A0_P1_in Link6 O_C64_A0_P2_out Link0
+45 FIRFiltAlg2 I_C444_A0_P1_in Link18 O_C444_A0_P2_out Link14
+46 FIRFiltAlg3 I_C492_A0_P1_in Link21 O_C492_A0_P2_out Link27
+47 FIRFiltAlg4 I_C540_A0_P1_in Link33 O_C540_A0_P2_out Link28
+48 MultCtrlDelGrowAlg1 I_C63_A0_P1_in Link0 O_C63_A0_P2_out Link5
+49 MultCtrlDelGrowAlg2 I_C460_A0_P1_in Link14 O_C460_A0_P2_out Link13
+50 MultCtrlDelGrowAlg3 I_C508_A0_P1_in Link27 O_C508_A0_P2_out Link23
+51 MultCtrlDelGrowAlg4 I_C556_A0_P1_in Link28 O_C556_A0_P2_out Link29
+52 Gain1940AlgNS1 I_C74_A0_P1_in Link5 O_C74_A0_P2_out Link1
+53 Gain1940AlgNS4 I_C447_A0_P1_in Link13 O_C447_A0_P2_out Link16
+54 Gain1940AlgNS5 I_C495_A0_P1_in Link23 O_C495_A0_P2_out Link26
+55 Gain1940AlgNS6 I_C543_A0_P1_in Link29 O_C543_A0_P2_out Link31
+56 SWGain1940DBAlg2 I_C640_A0_P1_in Link1 I_C640_A0_P3_in Link16 O_C640_A0_P2_out Link38 O_C640_A0_P4_out Link39
+57 SWGain1940DBAlg3 I_C645_A0_P1_in Link26 I_C645_A0_P3_in Link31 O_C645_A0_P2_out Link41 O_C645_A0_P4_out Link40
+58 MonoNoPostGain3dBFix1 I_C423_A0_P1_in Link38 O_C423_A0_P2_out Link11
+59 MonoNoPostGain3dBFix2 I_C469_A0_P1_in Link39 O_C469_A0_P2_out Link19
+60 MonoNoPostGain3dBFix4 I_C565_A0_P1_in Link40 O_C565_A0_P2_out Link32
+61 MonoNoPostGain3dBFix3 I_C517_A0_P1_in Link41 O_C517_A0_P2_out Link22
+62 MuteNoSlewAlg3 I_C56_A0_P1_in Link11 O_C56_A0_P2_out Link62
+63 MuteNoSlewAlg5 I_C453_A0_P1_in Link19 O_C453_A0_P2_out Link64
+64 MuteNoSlewAlg8 I_C501_A0_P1_in Link22 O_C501_A0_P2_out Link65
+65 MuteNoSlewAlg11 I_C549_A0_P1_in Link32 O_C549_A0_P2_out Link66
+66 ICSigma100Out1 I_C15_A0_P1_in Link62
+67 ICSigma100Out2 I_C442_A0_P1_in Link64
+68 ICSigma100Out3 I_C490_A0_P1_in Link65
+69 ICSigma100Out4 I_C538_A0_P1_in Link66
