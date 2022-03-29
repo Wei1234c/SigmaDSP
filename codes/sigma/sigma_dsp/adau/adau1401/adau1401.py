@@ -788,7 +788,8 @@ class ADAU1701(ADAU):
     # register related ============================================
     def _read_register(self, register):
         value = self.read_addressed_bytes(sub_address = register.address, n_bytes = register.n_bytes)
-        register.load_value(int.from_bytes(value, byteorder = 'big'))
+        if value:
+            register.load_value(int.from_bytes(value, 'big'))
         self._show_bus_data(register.bytes, address = register.address, reading = True)
         self._print_register(register)
         return register.value

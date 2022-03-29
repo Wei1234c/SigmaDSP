@@ -10,19 +10,20 @@ except:
 
 
 class Factory:
-    TEMP_PATH = '.'
+    TEMP_FOLDER = '.'
     CLASSES_DICT_FILE = 'classes_dict.json'
 
 
-    def __init__(self, project_xml_file_url = None, dsp = None):
+    def __init__(self, project_xml_file_url = None, dsp = None, temp_folder = TEMP_FOLDER):
 
         self.project_xml_file_url = project_xml_file_url
         self.dsp = dsp
+        self._temp_folder = temp_folder
 
         self._classes_dict = None
 
-        if self.TEMP_PATH not in sys.path:
-            sys.path.append(self.TEMP_PATH)
+        if self._temp_folder not in sys.path:
+            sys.path.append(self._temp_folder)
 
 
     def __enter__(self):
@@ -95,7 +96,7 @@ class Factory:
     def load_classes_dict(self):
         import json
 
-        classes_dict_file = '/'.join([self.TEMP_PATH, self.CLASSES_DICT_FILE])
+        classes_dict_file = '/'.join([self._temp_folder, self.CLASSES_DICT_FILE])
 
         try:
             with open(classes_dict_file, 'rt') as f:

@@ -1,10 +1,12 @@
+import gc
 import os
 import sys
 
 
 try:
     from sigma.bus import adapters
-    from sigma.sigma_dsp.adau import ADAU
+    # from sigma.sigma_dsp.adau import ADAU
+    from sigma.sigma_dsp.adau.adau1401 import ADAU1401 as ADAU
     from sigma.factory.ufactory import Factory
     from bridges.ftdi.controllers.i2c import I2cController
     from bridges.interfaces.micropython.machine import Pin
@@ -26,58 +28,58 @@ try:
     bus = adapters.I2C(_i2c)
 
     project_xml_file_url = os.sep.join(['..', '..', '..', 'SigmaStudio projects', 'projects', 'demo', 'demo.xml'])
-    class_files_root_url = os.sep.join(['..', '..', 'sigma', 'sigma_studio', 'toolbox', 'cells'])
+    # class_files_root_url = os.sep.join(['..', '..', 'sigma', 'sigma_studio', 'toolbox', 'cells'])
 
 except:
 
     #  for ESP32 ===========================
+    import config
     import peripherals
-    from adau import ADAU
+    import adapters
+    # from adau import ADAU
+    from adau1401 import ADAU1401 as ADAU
     from ufactory import Factory
-    import gc
 
 
-
-    def collect_garbage():
-        gc.collect()
-        if sys.platform == 'esp32':
-            print('[Memory - free: {}   allocated: {}]'.format(gc.mem_free(), gc.mem_alloc()))
-
-
+    # from factory import Factory
 
     with_hardware_device = True
 
     if with_hardware_device:
-        _i2c = peripherals.I2C.get_uPy_i2c(id = -1, scl_pin_id = 5, sda_pin_id = 4, freq = 400000)
-
+        _i2c = peripherals.I2C.get_uPy_i2c(id = -1,
+                                           scl_pin_id = config.I2C_SCL_PIN_ID,
+                                           sda_pin_id = config.I2C_SDA_PIN_ID)
     else:
         _i2c = None  # using None for testing without actual hardware device.
 
     bus = adapters.I2C(_i2c)
 
-    project_xml_file_url = 'demo.xml'
-    class_files_root_url = 'cells'
+    project_xml_file_url = 'demo_upy.xml'
 
-    #  for ESP32 ===========
+
+
+def collect_garbage():
+    gc.collect()
+    if sys.platform == 'esp32':
+        print('[Memory - free: {}   allocated: {}]'.format(gc.mem_free(), gc.mem_alloc()))
+
+
 
 dsp = ADAU(bus)
 
 factory = Factory(project_xml_file_url = project_xml_file_url,
-                  dsp = dsp
+                  dsp = dsp,
+                  # temp_folder = '../PC/temp'
                   )
 
 print('factory ready.')
 
-#
-# # for testing on ESP32 =============================
-# # dsp, factory ======================================
+# # # for testing on ESP32 =============================
+# # # dsp, factory ======================================
 #
 # from test_adau_upy import dsp, factory, collect_garbage
-#
-# collect_garbage()
-# # factory.classes_dict
-#
-# # ======================================
+
+# # IO ==============================
 #
 # class mo:
 #     pass
@@ -91,30 +93,14 @@ print('factory ready.')
 # param.bytes = bytes([0, 0, 0, 1])
 # param.size = len(param.bytes)
 # # dsp.write_parameter(param)
-# dsp.read_parameter(param)
+# print(dsp.read_parameter(param))
 #
 # # IC and Parameter ==============================
 #
 # collect_garbage()
 # ic = factory.get_ic()
-#
-# module = ic._modules[0]
-# print('module.name:', module.name)
-#
-# p = module._parameters[0]
-# print('parameter.name:', p.name)
-# p.dumps()
-# p.value
-# # p.set_value(2)
-# # p.value
-# # factory.dsp.write_parameter(p)
-# factory.dsp.read_parameter(p)
-# dsp.read_addressed_bytes(0, 4)
-#
-# # ==============================
-#
-#
 # collect_garbage()
-# cell = factory.get_cell_by_name(ic._modules[0].name, ic)
-#
+# cells = factory.get_cells(ic)
+# collect_garbage()
+# print(cells.keys())
 # # ==============================

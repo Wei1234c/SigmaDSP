@@ -3,7 +3,7 @@ import os
 from sigma.bus import adapters
 from sigma.factory import Factory
 from sigma.sigma_dsp.adau.adau1401 import ADAU1401
-from usbi import I2C, release_usb_device
+from usbi.usbi import I2C, release_usb_device
 
 
 release_usb_device()

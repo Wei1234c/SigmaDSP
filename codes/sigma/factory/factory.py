@@ -10,12 +10,12 @@ except:
 
 
 class Factory(ufactory.Factory):
-    TEMP_PATH = 'temp'
+    TEMP_FOLDER = 'temp'
     CLASSES_DICT_FILE = 'classes_dict.json'
 
 
-    def __init__(self, project_xml_file_url = None, class_files_root_url = None, dsp = None):
-        super().__init__(project_xml_file_url = project_xml_file_url, dsp = dsp)
+    def __init__(self, project_xml_file_url = None, class_files_root_url = None, dsp = None, temp_folder = TEMP_FOLDER):
+        super().__init__(project_xml_file_url = project_xml_file_url, dsp = dsp, temp_folder = temp_folder)
 
         self.class_files_root_url = class_files_root_url
 
@@ -64,8 +64,8 @@ class Factory(ufactory.Factory):
     def class_files_root_url(self, url):
         self._class_files_root_url = url
 
-        if self.TEMP_PATH not in os.listdir():
-            os.mkdir(self.TEMP_PATH)
+        if self._temp_folder not in os.listdir():
+            os.mkdir(self._temp_folder)
 
         if url is not None:
             self._copy_classes_files()
@@ -76,7 +76,7 @@ class Factory(ufactory.Factory):
 
         import pandas as pd
 
-        df = pd.DataFrame(self._get_classes_list(self._class_files_root_url or self.TEMP_PATH),
+        df = pd.DataFrame(self._get_classes_list(self._class_files_root_url or self._temp_folder),
                           columns = ('class_name', 'file_name', 'path')).drop_duplicates()
         df.sort_values(by = ['class_name'], inplace = True)
         df.index = range(len(df))
@@ -93,21 +93,19 @@ class Factory(ufactory.Factory):
 
     # classes =================================
 
-    @classmethod
-    def _gen_classes_dict_json(cls):
+    def _gen_classes_dict_json(self):
         import json
 
-        json_str = json.dumps(cls._gen_classes_dict(), indent = 4, sort_keys = False)
+        json_str = json.dumps(self._gen_classes_dict(), indent = 4, sort_keys = False)
 
-        with open(os.sep.join([cls.TEMP_PATH, cls.CLASSES_DICT_FILE]), 'wt') as f:
+        with open(os.sep.join([self._temp_folder, self.CLASSES_DICT_FILE]), 'wt') as f:
             f.write(json_str)
 
         return json_str
 
 
-    @classmethod
-    def _gen_classes_dict(cls):
-        classes = cls._get_classes_list(cls.TEMP_PATH)
+    def _gen_classes_dict(self):
+        classes = self._get_classes_list(self._temp_folder)
         classes_dict = {class_name: file_name.replace('.py', '') for (class_name, file_name, _) in classes}
 
         # return cls._class_file_to_file_classes(classes_dict)
@@ -157,7 +155,7 @@ class Factory(ufactory.Factory):
 
         for _, file_name, path in self._get_classes_list(self._class_files_root_url):
             if file_name.endswith('.py'):
-                self._copy_file(path, os.sep.join([self.TEMP_PATH, file_name]))
+                self._copy_file(path, os.sep.join([self._temp_folder, file_name]))
 
 
     @staticmethod
