@@ -17,7 +17,7 @@
 
 ### Design and Features  
 - PC control: Can control DSP hardware's behavior from PC, so resources (like Python, AI) are available for filter tuning.
-- Portability: The same package can also be used on ESP32 without modification. (see [here](https://github.com/Wei1234c/SigmaDSP/blob/master/notebooks/Functional%20test/Functional%20Demostration%20-%20with%20MicroPython%20Remote.ipynb))
+- Portability: The same package can also be used on ESP32 to control SigmaDSP, without modification. (see [here](https://github.com/Wei1234c/SigmaDSP/blob/master/notebooks/Functional%20test/Functional%20Demostration%20-%20with%20MicroPython%20Remote.ipynb))
 - Coverage of SigmaStudio Toolbox: one-to-one class mapping for each SigmaStudio Toolbox algorithm (most of them are not tested yet though).
 - Easy to use: only the XML file of SigmaStudio project is required. "Factory" will render every thing you need.
 - Serialization: 
