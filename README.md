@@ -5,7 +5,7 @@
 
 ### What is This ?
 - This is a Python package, with which you can:
-    - Control SigmaDSP (ADAU1401/ADAU1701) from PC by:
+    - Control SigmaDSP (ADAU1401/ADAU1701) from PC or ESP32 by:
         - Reading the XML file of SigmaStudio project and generates proxy objects.
         - Proxy objects represent SigmaStudio Toolbox algorithms in your project, and have functions like set_frequency, set_dB, set_coefficients... correspondingly.
         
@@ -17,6 +17,7 @@
 
 ### Design and Features  
 - PC control: Can control DSP hardware's behavior from PC, so resources (like Python, AI) are available for filter tuning.
+- Portability: The same package can also be used on ESP32 without modification. (see [here](https://github.com/Wei1234c/SigmaDSP/blob/master/notebooks/Functional%20test/Functional%20Demostration%20-%20with%20MicroPython%20Remote.ipynb))
 - Coverage of SigmaStudio Toolbox: one-to-one class mapping for each SigmaStudio Toolbox algorithm (most of them are not tested yet though).
 - Easy to use: only the XML file of SigmaStudio project is required. "Factory" will render every thing you need.
 - Serialization: 
