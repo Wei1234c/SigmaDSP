@@ -14,11 +14,10 @@ class Factory:
     CLASSES_DICT_FILE = 'classes_dict.json'
 
 
-    def __init__(self, project_xml_file_url = None, dsp = None, temp_folder = TEMP_FOLDER):
-
+    def __init__(self, project_xml_file_url = None, dsp = None, temp_folder = None):
         self.project_xml_file_url = project_xml_file_url
         self.dsp = dsp
-        self._temp_folder = temp_folder
+        self._temp_folder = self.TEMP_FOLDER if temp_folder is None else temp_folder
 
         self._classes_dict = None
 

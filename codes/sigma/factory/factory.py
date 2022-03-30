@@ -14,7 +14,7 @@ class Factory(ufactory.Factory):
     CLASSES_DICT_FILE = 'classes_dict.json'
 
 
-    def __init__(self, project_xml_file_url = None, class_files_root_url = None, dsp = None, temp_folder = TEMP_FOLDER):
+    def __init__(self, project_xml_file_url = None, class_files_root_url = None, dsp = None, temp_folder = None):
         super().__init__(project_xml_file_url = project_xml_file_url, dsp = dsp, temp_folder = temp_folder)
 
         self.class_files_root_url = class_files_root_url
