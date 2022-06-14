@@ -46,6 +46,10 @@ class Delay(BasicDSP):
         self.set_param(int(n), param_name = self.BUFFERSIZE_PARAM, **kwargs)
 
 
+    def get_max_buffer_size(self, **kwargs):
+        return self.get_param(param_name = self.BUFFERSIZE_PARAM, **kwargs).value
+
+
     def set_delayed_samples(self, n = 0, **kwargs):
         self.set_param(int(n), param_name = self.DELAY_PARAM, **kwargs)
 
@@ -65,8 +69,46 @@ class Delay(BasicDSP):
 
 
 
-class FractionalVoltageControlledDelayNoZip(Delay):
+class FractionalDelay(Delay):
+    DELAY_PARAM = ''
     BUFFERSIZE_PARAM = 'Limit1buffersize'
+
+
+    def set_delayed_percentage(self, percentage, **kwargs):
+        assert 0 <= percentage <= 1, f'0 <= percentage ({percentage}) <= 1'
+        self.set_param(percentage, param_name = self.DELAY_PARAM, **kwargs)
+
+
+    def get_delayed_percentage(self, **kwargs):
+        return self.get_param(param_name = self.DELAY_PARAM, **kwargs).value
+
+
+    def set_delayed_ms(self, delayed_ms = 0, **kwargs):
+        self.set_delayed_percentage(delayed_ms / self.max_delayed_ms, **kwargs)
+
+
+    def get_delayed_ms(self, **kwargs):
+        percentage = self.get_delayed_percentage(**kwargs)
+        return self.max_delayed_ms * percentage
+
+
+    @property
+    def max_delayed_ms(self):
+        samples_max = self.get_max_buffer_size()
+        return samples_max / self._dsp.sample_rate * 1000
+
+
+    def set_delayed_samples(self, *args, **kwargs):
+        raise NotImplementedError
+
+
+    def get_delayed_samples(self, **kwargs):
+        raise NotImplementedError
+
+
+
+class FractionalVoltageControlledDelayNoZip(FractionalDelay):
+    pass
 
 
 
@@ -76,7 +118,7 @@ class MultiTapVoltageControlledDelay(Delay):
 
 
     def set_delayed_percentage(self, percentage, **kwargs):
-        assert 0 <= percentage <= 1
+        assert 0 <= percentage <= 1, f'0 <= percentage ({percentage}) <= 1'
         self.set_param(percentage, param_name = self.DELAY_PARAM, **kwargs)
 
 
@@ -104,7 +146,7 @@ class MultCtrlDelGrowAlg(Delay):
 
 
 
-class MultCtrlFracDelGrowFixedAlg(Delay):
+class MultCtrlFracDelGrowFixedAlg(FractionalDelay):
     pass
 
 
