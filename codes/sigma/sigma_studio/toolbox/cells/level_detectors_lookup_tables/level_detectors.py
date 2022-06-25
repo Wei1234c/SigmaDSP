@@ -49,7 +49,7 @@ class SingleBandLevelDet(LevelDetector):
     HOLD_PARAM = 'hold'
 
 
-    def set_hold_time(self, time_ms, **kwargs):  # todo: need validate formular..
+    def set_hold_time(self, time_ms, **kwargs):  # todo: need to validate formular..
         self.set_param(int(time_ms * self._dsp.sample_rate / 1000),
                        param_name = self.HOLD_PARAM, **kwargs)
 

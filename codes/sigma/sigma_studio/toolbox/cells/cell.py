@@ -90,25 +90,6 @@ class Cell:
 
     # utilities functions - parameter-related ================
 
-    def get_param(self, param_name = '', algorithm_idx = 0):
-        assert param_name in self.PARAMETER_SHORT_NAMES, \
-            f'{param_name} not in valid params: {self.PARAMETER_SHORT_NAMES}'
-
-        param = self._module._algorithms[algorithm_idx].parameters[param_name]
-
-        return self.read_parameter(param)
-
-
-    def set_param(self, data, param_name = '', send_now = True, algorithm_idx = None):
-        if algorithm_idx is None:
-            indices = range(len(self._module._algorithms))
-        else:
-            indices = algorithm_idx if hasattr(algorithm_idx, '__iter__') else [algorithm_idx]
-
-        for i in indices:
-            self._set_a_param(data = data, param_name = param_name, send_now = send_now, algorithm_idx = i)
-
-
     def read_parameter(self, param):  # read from hardware
         if self._dsp is not None:  # added for Factory.show_methods()
             ba = self._dsp.read_parameter(param)
@@ -122,8 +103,31 @@ class Cell:
         self._dsp.write_parameter(param, send_now = send_now)
 
 
+    def get_param(self, param_name = '', algorithm_idx = 0):
+        assert param_name in self.PARAMETER_SHORT_NAMES, \
+            f'{param_name} not in valid params: {self.PARAMETER_SHORT_NAMES}'
+
+        param = self._module._algorithms[algorithm_idx].parameters[param_name]
+
+        return self.read_parameter(param)
+
+
+    def get_params(self, **kwargs):
+        return (self.get_param(param_name = p.short_name, **kwargs) for p in self.parameters.values())
+
+
+    def set_param(self, data, param_name = '', send_now = True, algorithm_idx = None):
+        if algorithm_idx is None:
+            indices = range(len(self._module._algorithms))
+        else:
+            indices = algorithm_idx if hasattr(algorithm_idx, '__iter__') else [algorithm_idx]
+
+        for i in indices:
+            self._set_a_param(data = data, param_name = param_name, send_now = send_now, algorithm_idx = i)
+
+
     def get_parameters_values(self, **kwargs):
-        params = (self.get_param(param_name = p.short_name, **kwargs) for p in self.parameters.values())
+        params = self.get_params(**kwargs)
         return sorted([p.short_name, p.value] for p in params if p._number is not None)
 
 
