@@ -11,7 +11,7 @@
         
         
 ### Why This ?
-- ADAU1401/ADAU1701 are precious for DSP tasks, but I would like to tune filter coefficients automatically, therefore need to control DSP functions on the fly.
+- ADAU1401/ADAU1701 are precious for DSP tasks, but I would like to [tune filter coefficients automatically](https://github.com/Wei1234c/DRC/blob/master/notebooks/Digital%20Room%20Correction.ipynb), therefore need to control DSP functions on the fly.
 - SigmaStudio supports scripting from Python, see [SigmaStudio Scripting from Python](https://wiki.analog.com/resources/tools-software/sigmastudio/usingsigmastudio/scripting/python). However, I prefer that the same package can be used on Windows / Linux, PC / RPi / ESP32 without modification. 
 
 
@@ -21,13 +21,13 @@
 - Coverage of SigmaStudio Toolbox: one-to-one class mapping for each SigmaStudio Toolbox algorithm (most of them are not tested yet though).
 - Easy to use: only the XML file of SigmaStudio project is required. "Factory" will render every thing you need.
 - Serialization: 
-    - Load from:  
+    - Load program and parameters of SigmaDSP from:  
         - files: 
             - Binary (bytearray) file
             - SigmStudio text files (e.g. NumBytes_IC_1.dat, TxBuffer_IC_1.dat)
             - SigmaStudio project.xml
         - EEPROM
-    - Save to:   
+    - Save program and parameters of SigmaDSP to:   
         - files: 
             - Binary (bytearray) file
             - Text file (converted from binary file)
