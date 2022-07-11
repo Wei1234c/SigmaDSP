@@ -93,14 +93,30 @@ class Cell:
     def read_parameter(self, param):  # read from hardware
         if self._dsp is not None:  # added for Factory.show_methods()
             ba = self._dsp.read_parameter(param)
+
             if ba is not None:
                 param.set_value(ba)
 
         return param
 
 
+    def load_parameter_from_eeprom(self, param):  # load from eeprom
+        if self._dsp is not None:
+            ba = self._dsp.eeprom.read_parameter(n_bytes = param.size, param_address = param.address)
+
+            if ba is not None:
+                param.set_value(ba)
+                self.write_parameter(param)
+
+        return param
+
+
     def write_parameter(self, param, send_now = True):  # write to hardware
         self._dsp.write_parameter(param, send_now = send_now)
+
+
+    def save_parameter_to_eeprom(self, param):  # write to eeprom
+        self._dsp.eeprom.write_parameter(bytes_array = param.bytes, param_address = param.address)
 
 
     def get_param(self, param_name = '', algorithm_idx = 0):

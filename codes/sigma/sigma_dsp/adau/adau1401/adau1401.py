@@ -93,9 +93,37 @@ class ADAU1701(ADAU):
                     return message
 
 
+        def find_params_start_address(self, messages = None):
+            # avoid accessing self.message (lazy fetch) over TCPi, which may take a long time.
+            # it will take 4.6 seconds if access via TCPi.
+            messages = self.messages if messages is None else messages
+            param_message = self._find_message_write(messages, self._parent.parameter_ram.ADDRESS_MIN)
+            self._params_start_address = messages.bytes.find(param_message.data)
+            return self._params_start_address
+
+
+        @property
+        def params_start_address(self):
+            if not hasattr(self, '_params_start_address'):
+                self.find_params_start_address()
+            return self._params_start_address
+
+
         @property
         def params_message(self):
             return self._find_message_write(self.messages, self._parent.parameter_ram.ADDRESS_MIN)
+
+
+        def read_parameter(self, n_bytes, param_address):
+            return self.read(n_bytes = n_bytes,
+                             address = param_address * self._parent.parameter_ram.ADDR_INCREMENT +
+                                       self.params_start_address)
+
+
+        def write_parameter(self, bytes_array, param_address):
+            self.write(bytes_array = bytes_array,
+                       address = param_address * self._parent.parameter_ram.ADDR_INCREMENT +
+                                 self.params_start_address)
 
 
         @property
